@@ -1,0 +1,88 @@
+.cause-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    padding-top: 1.9rem;
+    padding-bottom: 1.25rem;
+    right: 0;
+}
+
+form {
+
+}
+
+label {
+    color: white !important;
+    position: relative;
+    display: block;
+    margin-bottom: 0.5rem;
+
+}
+
+
+.textInput {
+    font: 18px "Times New Roman", Arial, sans-serif;
+    box-sizing: border-box;
+    display: block;
+    border: none;
+    border-radius: 5px;
+    padding: 1.25rem;
+    width: 20rem;
+    margin-bottom: 1.25rem;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.numInput {
+    box-sizing: border-box;
+    display: block;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    width: 20rem;
+    margin-bottom: 1.25rem;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.dateInput {
+    box-sizing: border-box;
+    display: block;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    width: 20rem;
+    margin-bottom: 1.25rem;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+
+.submit-button {
+    background: #459ec7 linear-gradient(to bottom, #459ec7 5%, #982abd 100%);
+    border-radius:15px;
+	border:1px solid #195bab;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:"Times New Roman", sans-serif;
+	font-size:14px;
+	padding:10px 20px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #c72493;
+}
+.submit-button:hover {
+    background: #982abd linear-gradient(to bottom, #982abd 5%, #459ec7 100%);
+}
+.submit-button:active {
+	position:relative;
+	top:1px;
+}
+
+.errors {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    color: #FFFFFF !important;
+}

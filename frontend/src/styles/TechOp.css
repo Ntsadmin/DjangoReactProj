@@ -1,0 +1,67 @@
+h1 {
+    align-items: center;
+    text-align: center;
+    font-family: "Times New Roman", sans-serif;
+}
+
+.Datatable {
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.9em;
+    font-family: "Times New Roman", sans-serif;
+    min-width: 25rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+
+.Datatable thead tr {
+    background-color: #614298;
+    color: #ffffff;
+    text-align: left;
+}
+
+.Datatable tr:hover td {
+    background-color: #634673;
+}
+
+.Datatable th {
+    text-align: center;
+    padding: 0.75rem 1rem;
+    color: #ffffff;
+}
+
+.Datatable td {
+    text-align: center;
+    padding: 0.75rem 1rem;
+    color: #ffffff;
+}
+
+.Datatable tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.Datatable tbody tr.active-row {
+    font-weight: bold;
+    color: rgb(97, 66, 152);
+}
+
+.myButton {
+    background: #459ec7 linear-gradient(to bottom, #459ec7 5%, #982abd 100%);
+    border-radius:15px;
+	border:1px solid #195bab;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:"Times New Roman", sans-serif;
+	font-size:14px;
+	padding:10px 20px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #c72493;
+}
+.myButton:hover {
+    background: #982abd linear-gradient(to bottom, #982abd 5%, #459ec7 100%);
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}

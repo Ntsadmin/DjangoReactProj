@@ -1,0 +1,25 @@
+.footer-content {
+    text-decoration: none
+}
+
+.page-footer {
+    background: rgb(255 255 255 / 12%);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    padding: 7px;
+    color: #fff;
+    font-size: 14px;
+    border-top: 1px solid rgb(255 255 255 / 15%);
+    z-index: 3
+}
+
+.invoice footer {
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    border-top: 1px solid rgb(255 255 255 / 15%);
+    padding: 8px 0
+}
