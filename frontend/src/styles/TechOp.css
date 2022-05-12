@@ -4,6 +4,11 @@ h1 {
     font-family: "Times New Roman", sans-serif;
 }
 
+.Data {
+    padding-top: 5rem;
+}
+
+
 .Datatable {
     border-collapse: collapse;
     margin: 1.5rem 0;
@@ -50,6 +55,7 @@ h1 {
     border-radius:15px;
 	border:1px solid #195bab;
 	display:inline-block;
+    justify-content: center;
 	cursor:pointer;
 	color:#ffffff;
 	font-family:"Times New Roman", sans-serif;

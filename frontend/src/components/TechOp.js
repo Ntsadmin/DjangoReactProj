@@ -60,7 +60,7 @@ function TechOp(props) {
     }
 
     return (
-        <div>
+        <div className={"Data"}>
             <h1>
                 {machineRef}
             </h1>

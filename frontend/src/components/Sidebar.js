@@ -17,7 +17,7 @@ function Sidebar() {
             <span> </span>
 
             {user ? (
-                <div onClick={logoutUser}> logout</div>
+                <a onClick={logoutUser}> logout</a>
             ): (
                     <Link to={'/login/'}> login </Link>
                     )}

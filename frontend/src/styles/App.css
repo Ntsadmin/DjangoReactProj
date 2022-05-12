@@ -5,14 +5,9 @@ body {
 }
 
 
-header {
-    margin-bottom: 3rem;
-    padding-bottom: 0.75rem;
-}
-
 
 #wrapper {
-    padding-bottom: 0.75rem;
+    padding-top: 0rem;
     margin: 0 auto;
     height: 100vh;
     background-size: cover;
