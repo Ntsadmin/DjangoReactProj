@@ -1,4 +1,6 @@
 import datetime
+from abc import ABC
+
 from django.utils import timezone
 
 from .models import DbUniqueWorkunits, DbWorkunits, DbTubetechoperations, DbTempdowntime, DbShift
@@ -65,9 +67,23 @@ def OpUnitRef(request, pk):
         try:
             shift_queryset = DbShift.objects.last()
             time_interval = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(hours=12)
-            UnitRef = DbTubetechoperations.objects.all().filter(unitref=pk, optime__gt=time_interval,
-                                                                shiftref=shift_queryset)
+            UnitRef = DbTubetechoperations.objects.select_related('unitref').all().filter(unitref=pk,
+                                                                                          optime__gt=time_interval,
+                                                                                          shiftref=shift_queryset)
             serializer = OperationTubeSerializer(UnitRef, many=True)
+            return Response({'data': serializer.data}, status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# Получить все совершённые операции конкретным участком
+@api_view(['GET'])
+def OpUnitRefLastElement(request, pk):
+    if request.method == 'GET':
+        try:
+            UnitRef = DbTubetechoperations.objects.all().filter(unitref=pk)
+            last_element = UnitRef.select_related('unitref').last()
+            serializer = OperationTubeSerializer(last_element)
             return Response({'data': serializer.data}, status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -108,7 +124,7 @@ def downCauseOp(request, pk):
             Cause.save()
             return Response(status=status.HTTP_201_CREATED)
         except:
-            return Response(status=status.HTTP_502_BAD_GATEWAY)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

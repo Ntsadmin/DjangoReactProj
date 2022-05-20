@@ -9,6 +9,7 @@ const units = new Operations()
 export default class Units extends Component {
     constructor(props) {
         super(props);
+        this.currentDate = new Date()
         this.state = {
             data: [],
             loaded: false,
@@ -33,6 +34,14 @@ export default class Units extends Component {
         }
     }
 
+    async getLastElement(pk) {
+        return await units.getLastElement(pk).then(responseData => {
+            const lastElementDate = new Date(responseData.data.data.optime);
+            const result = (this.currentDate - lastElementDate + 7200000) / (60 * 1000);
+
+            return result > 3
+        });
+    }
 
     componentDidMount() {
         this.unitsData();
@@ -46,10 +55,13 @@ export default class Units extends Component {
                 {this.state.data.map(machine => {
                     if (machine.online_accessible) {
                         return (
-                            <div key={machine.id} className={"main-content"}><Link
-                                to={`/techOp/${machine.unit_ref}?TechOp=${machine.unit_name}`}>
-                                {machine.unit_name}
-                            </Link></div>
+                            <div key={machine.id} className={"main-content"}>
+                                <Link
+                                    to={`/techOp/${machine.unit_ref}?TechOp=${machine.unit_name}`}>
+                                    {machine.unit_name}
+                                </Link>
+                                <div className={this.getLastElement(machine.unit_ref) ? 'Working' : "notWorking"}> </div>
+                            </div>
                         );
                     }
                 })}

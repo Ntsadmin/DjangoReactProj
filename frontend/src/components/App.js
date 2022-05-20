@@ -34,25 +34,6 @@ const units = {
 
 function App() {
 
-    // const [dayShift, setDayShift] = React.useState(false)
-    // const [nightShift, setNightShift] = React.useState(false)
-    //
-    // useEffect(()=> {
-    //     const timer = setTimeout(()=>{
-    //         let date = new Date();
-    //         if (date.getHours() >= 8 && !dayShift) {
-    //             setDayShift(true);
-    //             setNightShift(false)
-    //             console.log("well that's dayShift")
-    //         }
-    //         if (date.getHours() >= 20 && !nightShift) {
-    //             setNightShift(true);
-    //             setDayShift(false);
-    //             console.log("well that's nightShift")
-    //         }
-    //     }, 60000)
-    // }, [])
-
     return (
         <div>
 

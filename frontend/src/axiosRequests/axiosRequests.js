@@ -54,5 +54,11 @@ export default class Operations {
             data: data,
         })
     }
+
+    //Getting the last operations element for each machine
+    getLastElement(pk) {
+        const url = `${API_URL}/lastoperation/${pk}`
+        return axios.get(url)
+    }
 }
 

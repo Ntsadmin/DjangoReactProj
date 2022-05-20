@@ -11,14 +11,14 @@
     padding: 2rem 4rem 2rem 4rem;
     border-radius: 5px;
     margin: 1.5rem;
-    font-size:18px;
+    font-size: 18px;
     background-color: rgba(16, 35, 77, 0.45);
     background-clip: border-box;
     color: #9cb5bd;
 }
 
 a {
-    color:#fff;
+    color: #fff;
     text-decoration: none;
 }
 
@@ -29,5 +29,27 @@ a:hover {
 
 a::before {
     box-shadow: inset 0 0 0 166px #337AB7;
+}
+
+.Working {
+    width: 10px;
+    height: 10px;
+    line-height: 10px;
+    border-radius: 50%; /* the magic */
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    text-align: center;
+    background: #0bec0d;
+}
+
+.notWorking {
+    width: 10px;
+    height: 10px;
+    line-height: 10px;
+    border-radius: 50%; /* the magic */
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    text-align: center;
+    background: #ec021b;
 }
 
