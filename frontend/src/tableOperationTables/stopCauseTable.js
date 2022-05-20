@@ -1,12 +1,13 @@
-function stopCauseTable(data, MachineName) {
+function stopCauseTable(ResponseData, MachineName) {
     setTimeout(function () {
-        const tableData = data;
+        // console.log(ResponseData)
+        const tableData = ResponseData.data;
         let table = document.getElementById("tbody-content-cause");
         let k = "";
         table.innerHTML = k;
 
         try {
-            if (tableData !== null) {
+            if (tableData.length) {
                 console.log("not null")
             } else {
                 k += '<tr>';

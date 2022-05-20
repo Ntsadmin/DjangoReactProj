@@ -7,7 +7,6 @@ from django.db import models
 
 # Модель регистрации смен
 class DbShift(models.Model):
-    id = models.IntegerField(primary_key=True)
     shiftnum = models.IntegerField()
     time_date = models.DateTimeField(default=datetime.datetime.now)
 
@@ -32,7 +31,6 @@ class DbUniqueStorage(models.Model):
 
 # Модель представления заполненности стеллажей
 class DbStorage(models.Model):
-    id = models.IntegerField(primary_key=True)
     storage_time = models.DateTimeField()
     storage_ref = models.ForeignKey(DbUniqueStorage, to_field='storageref', on_delete=models.RESTRICT,
                                     db_column='storage_ref', null=True)
@@ -47,7 +45,6 @@ class DbStorage(models.Model):
 
 # Модель представления доступных диаметров труб
 class DbTubediameter(models.Model):
-    id = models.IntegerField(primary_key=True)
     diameter = models.IntegerField(unique=True)
 
     class Meta:
@@ -59,7 +56,6 @@ class DbTubediameter(models.Model):
 
 # Модель представления должностей
 class DbWorkerPost(models.Model):
-    id = models.IntegerField(primary_key=True)
     post_name = models.CharField(max_length=100)
     salary = models.IntegerField(default=0)
 
@@ -69,7 +65,6 @@ class DbWorkerPost(models.Model):
 
 # Модель представления уникальных участков
 class DbUniqueWorkunits(models.Model):
-    id = models.IntegerField(primary_key=True)
     unit_name = models.CharField(unique=True, max_length=255)
 
     class Meta:
@@ -81,7 +76,6 @@ class DbUniqueWorkunits(models.Model):
 
 # Модель представления работников
 class DbWorker(models.Model):
-    id = models.IntegerField(primary_key=True)
     fullname = models.CharField(max_length=200)
     post = models.ForeignKey(DbWorkerPost, on_delete=models.RESTRICT, blank=True, null=True)
 
@@ -94,7 +88,6 @@ class DbWorker(models.Model):
 
 # Модель представления участков цеха
 class DbWorkunits(models.Model):
-    id = models.IntegerField(primary_key=True)
     unit_name = models.CharField(unique=True, max_length=255)
     unit_plan = models.IntegerField(blank=True, null=False, default=200)
     online_accessible = models.BooleanField()
@@ -111,7 +104,6 @@ class DbWorkunits(models.Model):
 
 # Модель представления замечания по участкам
 class DbProps(models.Model):
-    id = models.IntegerField(primary_key=True)
     unit = models.ForeignKey(DbWorkunits, on_delete=models.RESTRICT)
     prop_text = models.CharField(max_length=255)
 
@@ -121,7 +113,6 @@ class DbProps(models.Model):
 
 # Модель представления причин останова участков
 class DbTempdowntime(models.Model):
-    # id = models.IntegerField(primary_key=True)
     worker = models.ForeignKey(DbWorker, on_delete=models.RESTRICT, to_field='id')
     stop_cause = models.CharField(max_length=255)
     time_of_stoppage = models.DateTimeField(blank=False, null=False, default=datetime.datetime.now)
@@ -137,7 +128,6 @@ class DbTempdowntime(models.Model):
 
 # Модель представления совершённых операции
 class DbTubetechoperations(models.Model):
-    id = models.IntegerField(primary_key=True)
     diameterref = models.ForeignKey(DbTubediameter, on_delete=models.RESTRICT, db_column='diameterref', blank=True,
                                     null=True)
     unitref = models.ForeignKey(DbWorkunits, on_delete=models.RESTRICT, db_column='unitref', blank=True, null=True,

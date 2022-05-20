@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UniqueUnitView, UnitView, Operationunits, OpUnitRef, getUnitRef, downCauseOp, downCauseUnit, \
+from .views import UniqueUnitView, UnitView, OperationUnit, OpUnitRef, getUnitRef, downCauseOp, downCauseUnit, \
     ShiftUnit, MyTokenObtainPairView
 
 from rest_framework_simplejwt.views import (
@@ -10,7 +10,7 @@ urlpatterns = [
     path('uniqueunits/', UniqueUnitView.as_view(), name='uniqueunits'),
     path(r'uniqueunits/<int:pk>', getUnitRef, name='uniqueref'),
     path('units/', UnitView.as_view(), name='units'),
-    path(r'operations/', Operationunits, name='Operations'),
+    path(r'operations/', OperationUnit.as_view(), name='Operations'),
     path(r'operations/<int:pk>/', OpUnitRef, name='OpUnitRef'),
     path('downcause/', downCauseUnit.as_view(), name='cause'),
     path(r'downcause/<int:pk>/', downCauseOp, name='downCause'),

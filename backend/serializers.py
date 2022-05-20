@@ -20,7 +20,7 @@ class UnitSerializer(serializers.ModelSerializer):
 class OperationTubeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DbTubetechoperations
-        fields = ('id', 'diameterref', 'unitref', 'workerref', 'shiftref', 'opresult', 'optime', 'unit_regime')
+        fields = '__all__'
 
 
 # API представления для причин останов участков

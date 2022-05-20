@@ -44,12 +44,14 @@ export default class Units extends Component {
             <div className="bg_image">
 
                 {this.state.data.map(machine => {
-                    return (
-                        <div key={machine.id} className={"main-content"}><Link
-                            to={`/techOp/${machine.unit_ref}?TechOp=${machine.unit_name}`}>
-                            {machine.unit_name}
-                        </Link></div>
-                    );
+                    if (machine.online_accessible) {
+                        return (
+                            <div key={machine.id} className={"main-content"}><Link
+                                to={`/techOp/${machine.unit_ref}?TechOp=${machine.unit_name}`}>
+                                {machine.unit_name}
+                            </Link></div>
+                        );
+                    }
                 })}
 
             </div>

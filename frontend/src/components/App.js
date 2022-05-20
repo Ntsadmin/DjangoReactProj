@@ -13,11 +13,45 @@ import LoginPage from "./Login";
 import {AuthProvider} from "../context/AuthContext";
 import PrivateRoute from "../utils/PrivateRoute";
 
-const unitsList = ["Мойка 1", "Мойка 2", "Шаблонирование 1", "Шаблонирование 2", "НК 1", "НК 2", "Токарка 2",
-        "Токарка 1", "Муфтоотворот 1", "Муфтоотворот 2", "Муфтонаворот 1", "Муфтонаворот 2", "Опрессовка 1",
-        "Опрессовка 2", "Маркировка 1", "Маркировка 2"];
+const units = {
+    "Мойка 1": 10,
+    "Мойка 2": 50,
+    "Шаблонирование 1": 11,
+    "Шаблонирование 2": 51,
+    "Муфтоотворот 1": 12,
+    "Муфтоотворот 2": 52,
+    "НК 1": 13,
+    "НК 2": 53,
+    "Токарка 1": 14,
+    "Токарка 2": 54,
+    "Муфтонаворот 1": 15,
+    "Муфтонаворот 2": 55,
+    "Опрессовка 1": 16,
+    "Опрессовка 2": 56,
+    "Маркировка 1": 17,
+    "Маркировка 2": 57
+}
 
 function App() {
+
+    // const [dayShift, setDayShift] = React.useState(false)
+    // const [nightShift, setNightShift] = React.useState(false)
+    //
+    // useEffect(()=> {
+    //     const timer = setTimeout(()=>{
+    //         let date = new Date();
+    //         if (date.getHours() >= 8 && !dayShift) {
+    //             setDayShift(true);
+    //             setNightShift(false)
+    //             console.log("well that's dayShift")
+    //         }
+    //         if (date.getHours() >= 20 && !nightShift) {
+    //             setNightShift(true);
+    //             setDayShift(false);
+    //             console.log("well that's nightShift")
+    //         }
+    //     }, 60000)
+    // }, [])
 
     return (
         <div>
@@ -50,7 +84,7 @@ function App() {
 
                             <Route path={"/techOp/:id"}
                                    element={<PrivateRoute>
-                                       <TechOp unitsList={unitsList}/>
+                                       <TechOp unitsList={units}/>
                                    </PrivateRoute>}/>
 
                             <Route exact path={"/"}

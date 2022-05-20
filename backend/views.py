@@ -1,3 +1,6 @@
+import datetime
+from django.utils import timezone
+
 from .models import DbUniqueWorkunits, DbWorkunits, DbTubetechoperations, DbTempdowntime, DbShift
 from .serializers import UniqueUnitsSerializer, UnitSerializer, OperationTubeSerializer, DownOpCauseSerializer, \
     ShiftSerializer
@@ -21,8 +24,8 @@ class UnitView(generics.ListAPIView):
 
 
 # Причины остановы участков
-class downCauseUnit(generics.ListCreateAPIView):
-    queryset = DbTempdowntime.objects.all()
+class downCauseUnit(generics.ListAPIView):
+    queryset = DbTempdowntime.objects.select_related('worker', 'unit').all()
     serializer_class = DownOpCauseSerializer
 
 
@@ -32,16 +35,27 @@ class ShiftUnit(generics.ListCreateAPIView):
     serializer_class = ShiftSerializer
 
 
-# Получить все совершённые операции
-@api_view(['GET'])
-def Operationunits(request):
-    if request.method == 'GET':
-        try:
-            Tubes = DbTubetechoperations.objects.all()
-            serializer = OperationTubeSerializer(Tubes, many=True)
-            return Response({'data': serializer.data}, status=status.HTTP_200_OK)
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+class OperationUnit(generics.ListAPIView):
+    shift_queryset = DbShift.objects.last()
+    time_interval = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(hours=12)
+    queryset = DbTubetechoperations.objects.select_related('unitref').all().filter(optime__gt=time_interval,
+                                                                                   shiftref=shift_queryset)
+    serializer_class = OperationTubeSerializer
+
+
+# # Получить все совершённые операции
+# @api_view(['GET'])
+# def Operationunits(request):
+#     if request.method == 'GET':
+#         try:
+#             shift_queryset = DbShift.objects.last()
+#             time_interval = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(hours=12)
+#             Tubes = DbTubetechoperations.objects.select_related('unitref').all().filter(optime__gt=time_interval,
+#                                                                                         shiftref=shift_queryset)
+#             serializer = OperationTubeSerializer(Tubes, many=True)
+#             return Response({'data': serializer.data}, status=status.HTTP_200_OK)
+#         except:
+#             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 # Получить все совершённые операции конкретным участком
@@ -49,7 +63,10 @@ def Operationunits(request):
 def OpUnitRef(request, pk):
     if request.method == 'GET':
         try:
-            UnitRef = DbTubetechoperations.objects.all().filter(unitref=pk)
+            shift_queryset = DbShift.objects.last()
+            time_interval = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(hours=12)
+            UnitRef = DbTubetechoperations.objects.all().filter(unitref=pk, optime__gt=time_interval,
+                                                                shiftref=shift_queryset)
             serializer = OperationTubeSerializer(UnitRef, many=True)
             return Response({'data': serializer.data}, status=status.HTTP_200_OK)
         except:

@@ -1,7 +1,13 @@
-function techResultTable(data, machineName) {
+function techResultTable(ResponseData, machineName) {
     setTimeout(function () {
+        // console.log(data);
+        const tableData = ResponseData.data;
 
-        const tableData = data;
+        let all_tubes = 0;
+        let good_tubes = 0;
+        let bad_tubes = 0;
+        let repair_tubes = 0;
+        let productivity = 0
 
         const date = new Date();
         const currentTime = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
@@ -12,12 +18,12 @@ function techResultTable(data, machineName) {
         table.innerHTML = k;
         try {
 
-            if (tableData !== null) {
-                let all_tubes, good_tubes, bad_tubes, repair_tubes, productivity = 0
+            if (tableData.length) {
                 for(let i = 0; i < tableData.length; i++){
-                    if(tableData[i]['OpResult'] === 0){
+                    // console.log(tableData[i]);
+                    if(tableData[i]['opresult'] === 1){
                         good_tubes += 1;
-                    } else if(tableData[i]['OpResult'] === 1){
+                    } else if(tableData[i]['opresult'] === 2){
                         bad_tubes += 1;
                     } else{
                         repair_tubes +=1;
