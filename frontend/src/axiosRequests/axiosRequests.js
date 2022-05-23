@@ -55,9 +55,9 @@ export default class Operations {
         })
     }
 
-    //Getting the last operations element for each machine
-    getLastElement(pk) {
-        const url = `${API_URL}/lastoperation/${pk}`
+    //Getting the productivity of a machine
+    getProductivity(pk) {
+        const url = `${API_URL}/units/${pk}`
         return axios.get(url)
     }
 }

@@ -13,7 +13,7 @@ export default class Units extends Component {
         this.state = {
             data: [],
             loaded: false,
-            placeholder: "loading"
+            placeholder: "loading",
         }
     }
 
@@ -34,39 +34,49 @@ export default class Units extends Component {
         }
     }
 
-    async getLastElement(pk) {
-        return await units.getLastElement(pk).then(responseData => {
-            const lastElementDate = new Date(responseData.data.data.optime);
-            const result = (this.currentDate - lastElementDate + 7200000) / (60 * 1000);
-
-            return result > 3
-        });
+    async getCheckProductivity(pk) {
+        const productivityResponse = await units.getProductivity(pk);
+        return productivityResponse.data
     }
 
-    componentDidMount() {
-        this.unitsData();
+
+    async componentDidMount() {
+        await this.unitsData();
     }
+
 
     render() {
+        if (!this.state.loaded) return null
+        else {
+            return (
+                <div className="bg_image">
 
-        return (
-            <div className="bg_image">
+                    {this.state.data.map(machine => {
 
-                {this.state.data.map(machine => {
-                    if (machine.online_accessible) {
-                        return (
-                            <div key={machine.id} className={"main-content"}>
-                                <Link
-                                    to={`/techOp/${machine.unit_ref}?TechOp=${machine.unit_name}`}>
-                                    {machine.unit_name}
-                                </Link>
-                                <div className={this.getLastElement(machine.unit_ref) ? 'Working' : "notWorking"}> </div>
-                            </div>
-                        );
-                    }
-                })}
+                        if (machine.online_accessible) {
 
-            </div>
-        )
+                            this.getCheckProductivity(machine.unit_ref).then((res) => {
+                                return res
+                            })
+
+                            return (
+                                <div key={machine.id} className={"main-content"}>
+                                    <Link
+                                        to={`/techOp/${machine.unit_ref}?TechOp=${machine.unit_name}`}>
+                                        {machine.unit_name}
+                                    </Link>
+                                    <div
+                                        className={machine.is_productive === 2 ? 'Working' :
+                                            machine.is_productive === 1 ? "semi-working" :
+                                                "notWorking"}> </div>
+                                </div>
+                            );
+                        }
+                    })}
+
+                </div>
+            )
+        }
+
     }
 }

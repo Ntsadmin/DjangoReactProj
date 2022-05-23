@@ -6,12 +6,14 @@ export default async function shiftPost() {
 
     let currentDate = new Date();
 
-    let shiftNum = 1 ? 8 <= currentDate.getHours() < 20 : 2
+    let shiftNum = 8 <= currentDate.getHours() < 20 ? 1 : 2
 
     let params = {
-        "shiftnum": Number(shiftNum),
+        "shiftnum": shiftNum,
         "time_date": currentDate.toISOString()
     }
 
     const postShift = await shift.postShift(params)
+    alert(postShift.status)
+    return postShift.status
 }

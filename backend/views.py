@@ -25,6 +25,35 @@ class UnitView(generics.ListAPIView):
     serializer_class = UnitSerializer
 
 
+# Получить информацию по каждому участку по отдельности
+@api_view(['GET'])
+def getUnitRef(request, pk):
+    if request.method == 'GET':
+        try:
+
+            Unique = DbWorkunits.objects.all().filter(unit_ref=pk)
+
+            # Получаем далее последние операции за 10 мин, где мы будем сравнивать производительности
+            unit = DbWorkunits.objects.get(unit_ref=pk)
+            time_interval = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(minutes=10)
+            unique_unit_ref = DbTubetechoperations.objects.all().filter(unitref=pk,
+                                                                        optime__gt=time_interval).count()
+
+            if unique_unit_ref == 0:
+                unit.is_productive = 0
+            elif unique_unit_ref < 10:
+                unit.is_productive = 1
+            else:
+                unit.is_productive = 2
+            unit.save()
+
+            serializer = UnitSerializer(Unique, many=True)
+            return Response({'data': serializer.data}, status=status.HTTP_200_OK)
+
+        except:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 # Причины остановы участков
 class downCauseUnit(generics.ListAPIView):
     queryset = DbTempdowntime.objects.select_related('worker', 'unit').all()
@@ -76,30 +105,17 @@ def OpUnitRef(request, pk):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# Получить все совершённые операции конкретным участком
-@api_view(['GET'])
-def OpUnitRefLastElement(request, pk):
-    if request.method == 'GET':
-        try:
-            UnitRef = DbTubetechoperations.objects.all().filter(unitref=pk)
-            last_element = UnitRef.select_related('unitref').last()
-            serializer = OperationTubeSerializer(last_element)
-            return Response({'data': serializer.data}, status=status.HTTP_200_OK)
-        except:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-# Получить информацию по каждому участку по отдельности
-@api_view(['GET'])
-def getUnitRef(request, pk):
-    if request.method == 'GET':
-        try:
-            Unique = DbUniqueWorkunits.objects.all().filter(id=pk)
-            serializer = UniqueUnitsSerializer(Unique, many=True)
-            return Response({'data': serializer.data}, status=status.HTTP_200_OK)
-
-        except:
-            return Response(status=status.HTTP_204_NO_CONTENT)
+# # Получить все совершённые операции конкретным участком
+# @api_view(['GET'])
+# def OpUnitRefLastElement(request, pk):
+#     if request.method == 'GET':
+#         try:
+#             UnitRef = DbTubetechoperations.objects.all().filter(unitref=pk)
+#             last_element = UnitRef.select_related('unitref').last()
+#             serializer = OperationTubeSerializer(last_element)
+#             return Response({'data': serializer.data}, status=status.HTTP_200_OK)
+#         except:
+#             return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # Получить и записать причины остановы конкретного участка

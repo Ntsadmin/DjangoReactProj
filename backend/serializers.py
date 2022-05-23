@@ -13,7 +13,7 @@ class UniqueUnitsSerializer(serializers.ModelSerializer):
 class UnitSerializer(serializers.ModelSerializer):
     class Meta:
         model = DbWorkunits
-        fields = ('id', 'unit_name', 'unit_plan', 'online_accessible', 'unitref', 'unit_ref')
+        fields = '__all__'
 
 
 # API представления для совершённых операции

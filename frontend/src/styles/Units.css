@@ -42,6 +42,17 @@ a::before {
     background: #0bec0d;
 }
 
+.semi-working {
+    width: 10px;
+    height: 10px;
+    line-height: 10px;
+    border-radius: 50%; /* the magic */
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    text-align: center;
+    background: #eaec6a;
+}
+
 .notWorking {
     width: 10px;
     height: 10px;
