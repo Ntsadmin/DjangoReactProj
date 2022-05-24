@@ -6,11 +6,6 @@ function techResultTable(ResponseData, machineName) {
     let good_tubes = 0;
     let bad_tubes = 0;
     let repair_tubes = 0;
-    let productivity = 0
-
-    const date = new Date();
-    const currentTime = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-
 
     let table = document.getElementById("tbody-content-results");
     let k = "";
@@ -50,7 +45,7 @@ function techResultTable(ResponseData, machineName) {
         table.innerHTML += k;
 
     } catch (e) {
-        console.log(e)
+        alert(e)
     }
 }
 

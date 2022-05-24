@@ -36,7 +36,14 @@ export default class CheckLastOperation extends React.Component {
 
     async componentDidMount() {
         await this.unitsData();
-        console.log(this.state);
+        this.timer = setInterval(async () => {
+            await this.unitsData();
+        }, 60000)
+
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timer)
     }
 
 

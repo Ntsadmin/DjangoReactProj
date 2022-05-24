@@ -7,11 +7,10 @@ import "../styles/TechOp.css";
 
 import techResultTable from "../tableOperationTables/techResultTable";
 import stopCauseTable from "../tableOperationTables/stopCauseTable";
-import milliToHMS from "../utils/milliToHMS";
+
 
 import NoContent from "../Standart/NoContent";
 import CheckLastOperation from "./checkLastOperation";
-
 
 
 const Operation = new Operations()
@@ -31,26 +30,32 @@ function TechOp(props) {
         return await Operation.getOperations(unitId)
     }
 
-    async function getUnitDownCause(unitId) {
-        return await Operation.getDownCause(unitId)
-    }
+    // async function getUnitDownCause(unitId) {
+    //     return await Operation.getDownCause(unitId)
+    // }
 
 
     async function getOperations() {
         if (props.unitsList[machineRef] == params) {
             setAvailableMachine(true)
-            return await Promise.all([
-                getUnitOperations(params), getUnitDownCause(params)
-            ])
+            return await getUnitOperations(params)
         }
     }
 
 
     useEffect(() => {
         getOperations().then((ResponseResults) => {
-            techResultTable(ResponseResults[0].data, machineRef)
+            techResultTable(ResponseResults.data, machineRef)
             // stopCauseTable(ResponseResults[1].data, machineRef);
         });
+        const timer = setInterval(() => {
+
+            getOperations().then((ResponseResults) => {
+                techResultTable(ResponseResults.data, machineRef)
+                // stopCauseTable(ResponseResults[1].data, machineRef);
+            });
+        }, 60000);
+        return () => clearInterval(timer);
 
     }, [])
 
@@ -121,7 +126,6 @@ function TechOp(props) {
                 {/*    <button className={"myButton"}><a href={`/cause/?techId=${params}`}>Создать*/}
                 {/*        простой</a></button>*/}
                 {/*</div>*/}
-
 
             </div>
         )

@@ -42,7 +42,14 @@ export default class Units extends Component {
 
     async componentDidMount() {
         await this.unitsData();
+        // this.timer = setInterval(async () => {
+        //     await this.unitsData();
+        // }, 60000)
     }
+
+    // componentWillUnmount() {
+    //     clearInterval(this.timer)
+    // }
 
 
     render() {
