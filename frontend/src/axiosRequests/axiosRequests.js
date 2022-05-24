@@ -60,5 +60,11 @@ export default class Operations {
         const url = `${API_URL}/units/${pk}`
         return axios.get(url)
     }
+
+    //Getting the last Operation of a machine
+    getLastOperation(pk) {
+        const url = `${API_URL}/lastoperation/${pk}`
+        return axios.get(url)
+    }
 }
 

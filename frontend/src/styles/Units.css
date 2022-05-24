@@ -34,6 +34,7 @@ a::before {
 .Working {
     width: 10px;
     height: 10px;
+    margin-top: 0.5rem;
     line-height: 10px;
     border-radius: 50%; /* the magic */
     -moz-border-radius: 50%;
@@ -45,6 +46,7 @@ a::before {
 .semi-working {
     width: 10px;
     height: 10px;
+    margin-top: 0.5rem;
     line-height: 10px;
     border-radius: 50%; /* the magic */
     -moz-border-radius: 50%;
@@ -56,6 +58,7 @@ a::before {
 .notWorking {
     width: 10px;
     height: 10px;
+    margin-top: 0.5rem;
     line-height: 10px;
     border-radius: 50%; /* the magic */
     -moz-border-radius: 50%;

@@ -10,6 +10,7 @@ import DownCause from "./downCause";
 import Sidebar from "./sidebar";
 import LoginPage from "./Login";
 
+
 import {AuthProvider} from "../context/AuthContext";
 import PrivateRoute from "../utils/PrivateRoute";
 
@@ -65,7 +66,7 @@ function App() {
 
                             <Route path={"/techOp/:id"}
                                    element={<PrivateRoute>
-                                       <TechOp unitsList={units}/>
+                                       <TechOp unitsList={units} />
                                    </PrivateRoute>}/>
 
                             <Route exact path={"/"}

@@ -5,6 +5,10 @@ h1 {
 }
 
 .Data {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     padding-top: 5rem;
 }
 
@@ -52,22 +56,37 @@ h1 {
 
 .myButton {
     background: #459ec7 linear-gradient(to bottom, #459ec7 5%, #982abd 100%);
-    border-radius:15px;
-	border:1px solid #195bab;
-	display:inline-block;
+    border-radius: 15px;
+    border: 1px solid #195bab;
+    display: inline-block;
     justify-content: center;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:"Times New Roman", sans-serif;
-	font-size:14px;
-	padding:10px 20px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #c72493;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: "Times New Roman", sans-serif;
+    font-size: 14px;
+    padding: 10px 20px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #c72493;
 }
+
 .myButton:hover {
     background: #982abd linear-gradient(to bottom, #982abd 5%, #459ec7 100%);
 }
+
 .myButton:active {
-	position:relative;
-	top:1px;
+    position: relative;
+    top: 1px;
+}
+
+
+.clock-box {
+    background: black;
+    color: #ffffff;
+    box-shadow: 0 0 5px rgba(87, 45, 182, 0.71),
+    0 0 5px rgba(87, 45, 182, 0.76),
+    0 0 5px rgba(87, 45, 182, 0.82),
+    0 0 5px rgba(87, 45, 182, 0.82);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0 1rem 0;
 }

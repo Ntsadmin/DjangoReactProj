@@ -1,7 +1,6 @@
 import datetime
-from abc import ABC
-
 from django.utils import timezone
+import pytz
 
 from .models import DbUniqueWorkunits, DbWorkunits, DbTubetechoperations, DbTempdowntime, DbShift
 from .serializers import UniqueUnitsSerializer, UnitSerializer, OperationTubeSerializer, DownOpCauseSerializer, \
@@ -35,13 +34,15 @@ def getUnitRef(request, pk):
 
             # Получаем далее последние операции за 10 мин, где мы будем сравнивать производительности
             unit = DbWorkunits.objects.get(unit_ref=pk)
-            time_interval = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(minutes=10)
+            zone = pytz.timezone('Europe/Moscow')
+            time_interval = datetime.datetime.now(zone) + datetime.timedelta(hours=1)
+
             unique_unit_ref = DbTubetechoperations.objects.all().filter(unitref=pk,
                                                                         optime__gt=time_interval).count()
 
             if unique_unit_ref == 0:
                 unit.is_productive = 0
-            elif unique_unit_ref < 10:
+            elif unique_unit_ref < 60:
                 unit.is_productive = 1
             else:
                 unit.is_productive = 2
@@ -68,7 +69,8 @@ class ShiftUnit(generics.ListCreateAPIView):
 
 class OperationUnit(generics.ListAPIView):
     shift_queryset = DbShift.objects.last()
-    time_interval = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(hours=12)
+    time_interval_now = datetime.datetime.now(tz=timezone.utc)
+    time_interval = time_interval_now - datetime.timedelta(hours=10)
     queryset = DbTubetechoperations.objects.select_related('unitref').all().filter(optime__gt=time_interval,
                                                                                    shiftref=shift_queryset)
     serializer_class = OperationTubeSerializer
@@ -95,7 +97,7 @@ def OpUnitRef(request, pk):
     if request.method == 'GET':
         try:
             shift_queryset = DbShift.objects.last()
-            time_interval = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(hours=12)
+            time_interval = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(hours=10)
             UnitRef = DbTubetechoperations.objects.select_related('unitref').all().filter(unitref=pk,
                                                                                           optime__gt=time_interval,
                                                                                           shiftref=shift_queryset)
@@ -105,17 +107,17 @@ def OpUnitRef(request, pk):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# # Получить все совершённые операции конкретным участком
-# @api_view(['GET'])
-# def OpUnitRefLastElement(request, pk):
-#     if request.method == 'GET':
-#         try:
-#             UnitRef = DbTubetechoperations.objects.all().filter(unitref=pk)
-#             last_element = UnitRef.select_related('unitref').last()
-#             serializer = OperationTubeSerializer(last_element)
-#             return Response({'data': serializer.data}, status=status.HTTP_200_OK)
-#         except:
-#             return Response(status=status.HTTP_204_NO_CONTENT)
+# Получить все последнюю операцию конкретным участком
+@api_view(['GET'])
+def OpUnitRefLastElement(request, pk):
+    if request.method == 'GET':
+        try:
+            UnitRef = DbTubetechoperations.objects.all().filter(unitref=pk)
+            last_element = UnitRef.select_related('unitref').last()
+            serializer = OperationTubeSerializer(last_element)
+            return Response({'data': serializer.data}, status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # Получить и записать причины остановы конкретного участка

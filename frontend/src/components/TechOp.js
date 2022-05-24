@@ -7,7 +7,11 @@ import "../styles/TechOp.css";
 
 import techResultTable from "../tableOperationTables/techResultTable";
 import stopCauseTable from "../tableOperationTables/stopCauseTable";
+import milliToHMS from "../utils/milliToHMS";
+
 import NoContent from "../Standart/NoContent";
+import CheckLastOperation from "./checkLastOperation";
+
 
 
 const Operation = new Operations()
@@ -17,6 +21,9 @@ function TechOp(props) {
     const location = useLocation().search;
     const machineRef = new URLSearchParams(location).get('TechOp');
     const params = useParams().id;
+
+    const currentMoscowTime = new Date();
+    currentMoscowTime.setHours(currentMoscowTime.getHours() + 2);
 
     const [availableMachine, setAvailableMachine] = useState(false);
 
@@ -41,8 +48,8 @@ function TechOp(props) {
 
     useEffect(() => {
         getOperations().then((ResponseResults) => {
-            techResultTable(ResponseResults[0].data, machineRef);
-            stopCauseTable(ResponseResults[1].data, machineRef);
+            techResultTable(ResponseResults[0].data, machineRef)
+            // stopCauseTable(ResponseResults[1].data, machineRef);
         });
 
     }, [])
@@ -57,6 +64,7 @@ function TechOp(props) {
                 <h1>
                     {machineRef}
                 </h1>
+
                 <div>
                     <Table className={"Datatable"}>
                         <thead>
@@ -76,41 +84,43 @@ function TechOp(props) {
                             <th>
                                 Количество ремонтных
                             </th>
-                            <th>
-                                Производительность (труб/10 мин)
-                            </th>
                         </tr>
                         </thead>
                         <tbody id={"tbody-content-results"}/>
                     </Table>
                 </div>
 
-                <div>
-                    <table className={"Datatable"}>
-                        <thead>
-                        <tr>
-                            <th>
-                                Название установки
-                            </th>
-                            <th>
-                                Идентификатор работника
-                            </th>
-                            <th>
-                                Причина сбоя
-                            </th>
-                            <th>
-                                Начала время остановки
-                            </th>
-                            <th>
-                                Время продолжения работы участка
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody id={"tbody-content-cause"}/>
-                    </table>
-                    <button className={"myButton"}><a href={`/cause/?techId=${params}`}>Создать
-                        простой</a></button>
+                <div className={"clock-box"}>
+                    <CheckLastOperation unitRef={params}/>
                 </div>
+
+
+                {/*<div>*/}
+                {/*    <table className={"Datatable"}>*/}
+                {/*        <thead>*/}
+                {/*        <tr>*/}
+                {/*            <th>*/}
+                {/*                Название установки*/}
+                {/*            </th>*/}
+                {/*            <th>*/}
+                {/*                Идентификатор работника*/}
+                {/*            </th>*/}
+                {/*            <th>*/}
+                {/*                Причина сбоя*/}
+                {/*            </th>*/}
+                {/*            <th>*/}
+                {/*                Начала время остановки*/}
+                {/*            </th>*/}
+                {/*            <th>*/}
+                {/*                Время продолжения работы участка*/}
+                {/*            </th>*/}
+                {/*        </tr>*/}
+                {/*        </thead>*/}
+                {/*        <tbody id={"tbody-content-cause"}/>*/}
+                {/*    </table>*/}
+                {/*    <button className={"myButton"}><a href={`/cause/?techId=${params}`}>Создать*/}
+                {/*        простой</a></button>*/}
+                {/*</div>*/}
 
 
             </div>
