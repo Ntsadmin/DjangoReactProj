@@ -42,6 +42,9 @@ INSTALLED_APPS = [
 
     # for speed testing (requests etc...)
     "debug_toolbar",
+
+    # App for celery beats
+    'django_celery_beat',
 ]
 
 SIMPLE_JWT = {
@@ -178,7 +181,7 @@ DATABASES = {
 
 
 # Celery settings
-# CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_BROKER_URL = 'amqp://admin:kjiflm@localhost:16555/'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
