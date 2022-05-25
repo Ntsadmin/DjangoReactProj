@@ -176,6 +176,10 @@ DATABASES = {
     }
 }
 
+
+# Celery settings
+# CELERY_BROKER_URL = 'amqp://localhost'
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
