@@ -66,5 +66,10 @@ export default class Operations {
         const url = `${API_URL}/lastoperation/${pk}`
         return axios.get(url)
     }
+
+    getFullOperations() {
+        const url = `${API_URL}/operations/`
+        return axios.get(url)
+    }
 }
 

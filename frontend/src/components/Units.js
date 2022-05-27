@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Operations from "../axiosRequests/axiosRequests";
 import "../styles/Units.css";
 import {Link} from "react-router-dom";
+import TechOp from "./TechOp";
 
 
 const units = new Operations()
@@ -14,6 +15,7 @@ export default class Units extends Component {
             data: [],
             loaded: false,
             placeholder: "loading",
+            operations: [],
         }
     }
 
@@ -33,6 +35,7 @@ export default class Units extends Component {
             })
         }
     }
+
 
     async getCheckProductivity(pk) {
         const productivityResponse = await units.getProductivity(pk);
@@ -68,10 +71,10 @@ export default class Units extends Component {
 
                             return (
                                 <div key={machine.id} className={"main-content"}>
-                                    <Link
-                                        to={`/techOp/${machine.unit_ref}?TechOp=${machine.unit_name}`}>
-                                        {machine.unit_name}
-                                    </Link>
+
+                                    <TechOp machineRef={machine.unit_ref} TechOp={machine.unit_name}
+                                            unitsList={this.props.unitsList}/>
+
                                     <div
                                         className={machine.is_productive === 2 ? 'Working' :
                                             machine.is_productive === 1 ? "semi-working" :

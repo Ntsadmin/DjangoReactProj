@@ -25,11 +25,6 @@ function Sidebar() {
                 <Link to={'/login/'}> Login </Link>
             )}
 
-            {user ? (
-                <a onClick={shiftPost}> Add Shift</a>
-            ) : (
-                <a> </a>
-            )}
         </Menu>
     )
 }

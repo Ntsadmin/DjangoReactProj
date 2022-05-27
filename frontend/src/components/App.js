@@ -42,9 +42,7 @@ function App() {
                 <Header/>
             </header>
 
-            <main className="wrapper" id={"wrapper"} style={{
-                backgroundImage: `url('../media/background.jpg')`
-            }}>
+            <main className="wrapper" id={"wrapper"}>
 
                 <div className={"sidebar-content"}>
                     <AuthProvider>
@@ -64,14 +62,14 @@ function App() {
                                        <DownCause/>
                                    </PrivateRoute>}/>
 
-                            <Route path={"/techOp/:id"}
-                                   element={<PrivateRoute>
-                                       <TechOp unitsList={units} />
-                                   </PrivateRoute>}/>
+                            {/*<Route path={"/techOp/:id"}*/}
+                            {/*       element={<PrivateRoute>*/}
+                            {/*           <TechOp unitsList={units} />*/}
+                            {/*       </PrivateRoute>}/>*/}
 
                             <Route exact path={"/"}
                                    element={<PrivateRoute>
-                                       <Units/>
+                                       <Units unitsList={units}/>
                                    </PrivateRoute>}/>
                         </Routes>
                     </AuthProvider>

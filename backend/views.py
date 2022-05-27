@@ -20,7 +20,7 @@ class UniqueUnitView(generics.ListAPIView):
 
 # Все доступные участки в цеху
 class UnitView(generics.ListAPIView):
-    queryset = DbWorkunits.objects.all()
+    queryset = DbWorkunits.objects.all().order_by('unit_ref')
     serializer_class = UnitSerializer
 
 
@@ -73,6 +73,7 @@ class OperationUnit(generics.ListAPIView):
     time_interval = time_interval_now - datetime.timedelta(hours=10)
     queryset = DbTubetechoperations.objects.select_related('unitref').all().filter(optime__gt=time_interval,
                                                                                    shiftref=shift_queryset)
+
     serializer_class = OperationTubeSerializer
 
 

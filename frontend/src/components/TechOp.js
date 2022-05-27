@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {useLocation, useParams} from "react-router-dom";
 import Operations from "../axiosRequests/axiosRequests";
 import {Table} from "react-bootstrap";
 
 import "../styles/TechOp.css";
 
 import techResultTable from "../tableOperationTables/techResultTable";
-import stopCauseTable from "../tableOperationTables/stopCauseTable";
 
 
 import NoContent from "../Standart/NoContent";
@@ -17,53 +15,37 @@ const Operation = new Operations()
 
 function TechOp(props) {
 
-    const location = useLocation().search;
-    const machineRef = new URLSearchParams(location).get('TechOp');
-    const params = useParams().id;
+    const params = props.machineRef
+    const machineRef = props.TechOp
 
     const currentMoscowTime = new Date();
     currentMoscowTime.setHours(currentMoscowTime.getHours() + 2);
 
     const [availableMachine, setAvailableMachine] = useState(false);
 
-    async function getUnitOperations(unitId) {
-        return await Operation.getOperations(unitId)
-    }
-
-    // async function getUnitDownCause(unitId) {
-    //     return await Operation.getDownCause(unitId)
-    // }
-
 
     async function getOperations() {
         if (props.unitsList[machineRef] == params) {
             setAvailableMachine(true)
-            return await getUnitOperations(params)
+            const responseData = await Operation.getOperations(params)
+            const resultTableData = responseData.data.data
+            techResultTable(resultTableData, machineRef, params)
+
         }
     }
 
 
-    useEffect(() => {
-        getOperations().then((ResponseResults) => {
-            techResultTable(ResponseResults.data, machineRef)
-            // stopCauseTable(ResponseResults[1].data, machineRef);
-        });
-        const timer = setInterval(() => {
+    useEffect( () => {
+        getOperations();
 
-            getOperations().then((ResponseResults) => {
-                techResultTable(ResponseResults.data, machineRef)
-                // stopCauseTable(ResponseResults[1].data, machineRef);
-            });
-        }, 60000);
+        const timer = setInterval(async () => {
+            await getOperations()
+        }, 6000);
         return () => clearInterval(timer);
 
     }, [])
 
-    if (!availableMachine) {
-        return (<div>
-            <NoContent/>
-        </div>)
-    } else {
+    if (availableMachine) {
         return (
             <div className={"Data"}>
                 <h1>
@@ -86,12 +68,9 @@ function TechOp(props) {
                             <th>
                                 Количество брака
                             </th>
-                            <th>
-                                Количество ремонтных
-                            </th>
                         </tr>
                         </thead>
-                        <tbody id={"tbody-content-results"}/>
+                        <tbody id={"tbody-content-results" + params}/>
                     </Table>
                 </div>
 
@@ -99,34 +78,12 @@ function TechOp(props) {
                     <CheckLastOperation unitRef={params}/>
                 </div>
 
-
-                {/*<div>*/}
-                {/*    <table className={"Datatable"}>*/}
-                {/*        <thead>*/}
-                {/*        <tr>*/}
-                {/*            <th>*/}
-                {/*                Название установки*/}
-                {/*            </th>*/}
-                {/*            <th>*/}
-                {/*                Идентификатор работника*/}
-                {/*            </th>*/}
-                {/*            <th>*/}
-                {/*                Причина сбоя*/}
-                {/*            </th>*/}
-                {/*            <th>*/}
-                {/*                Начала время остановки*/}
-                {/*            </th>*/}
-                {/*            <th>*/}
-                {/*                Время продолжения работы участка*/}
-                {/*            </th>*/}
-                {/*        </tr>*/}
-                {/*        </thead>*/}
-                {/*        <tbody id={"tbody-content-cause"}/>*/}
-                {/*    </table>*/}
-                {/*    <button className={"myButton"}><a href={`/cause/?techId=${params}`}>Создать*/}
-                {/*        простой</a></button>*/}
-                {/*</div>*/}
-
+            </div>
+        )
+    } else {
+        return (
+            <div>
+                <NoContent/>
             </div>
         )
     }
