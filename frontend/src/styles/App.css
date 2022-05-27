@@ -12,14 +12,15 @@ body {
     padding-top: 0rem;
     margin: 0 auto;
     height: 100%;
-    width: auto;
-    background-image: url('http://127.0.0.1:7000/media/background.jpg');
+    width: 100%;
+    background-image: url('http://192.100.1.108:7000/media/background.jpg');
     background-size: cover;
 
 }
 
 .content-wrapper {
-    display: block;
+    display: flex;
+    flex-direction: column;
     padding-left: 4.5rem;
     padding-top: 0.75rem;
 

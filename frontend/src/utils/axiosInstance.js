@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import dayjs from 'dayjs'
 
 
-const baseURL = 'http://127.0.0.1:7000'
+const baseURL = 'http://192.100.1.108:7000'
 
 
 let authTokens = localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null
