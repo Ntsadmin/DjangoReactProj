@@ -6,6 +6,7 @@ import "../styles/DownCause.css";
 
 const Cause = new Operations()
 
+// Функция, которая передаёт информацию для добавления причины простоя уникального участка (на будущее)
 function DownCause() {
 
     const [workerId, setWorkerId] = useState("");

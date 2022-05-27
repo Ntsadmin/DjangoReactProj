@@ -1,12 +1,15 @@
-from django.db import models
+"""
+Многие модели не были использованы в дальнейшим, но имеют своё представление для будущего пользования
+"""
 
-# Create your models here.
 import datetime
 from django.db import models
 
 
-# Модель регистрации смен
 class DbShift(models.Model):
+    """
+    Модель регистрации смен
+    """
     shiftnum = models.IntegerField()
     time_date = models.DateTimeField(default=datetime.datetime.now)
 
@@ -17,8 +20,10 @@ class DbShift(models.Model):
         return str(self.id)
 
 
-# Модель представления всех уникальных стеллажей цеха
 class DbUniqueStorage(models.Model):
+    """
+    Модель представления всех уникальных стеллажей цеха
+    """
     storageref = models.IntegerField(unique=True)
     storage_name = models.CharField(max_length=255)
 
@@ -29,8 +34,10 @@ class DbUniqueStorage(models.Model):
         return str(self.storageref)
 
 
-# Модель представления заполненности стеллажей
 class DbStorage(models.Model):
+    """
+    Модель представления заполненности стеллажей
+    """
     storage_time = models.DateTimeField()
     storage_ref = models.ForeignKey(DbUniqueStorage, to_field='storageref', on_delete=models.RESTRICT,
                                     db_column='storage_ref', null=True)
@@ -43,8 +50,10 @@ class DbStorage(models.Model):
         return f"{self.storage_ref}: {self.status}"
 
 
-# Модель представления доступных диаметров труб
 class DbTubediameter(models.Model):
+    """
+    Модель представления доступных диаметров труб
+    """
     diameter = models.IntegerField(unique=True)
 
     class Meta:
@@ -54,8 +63,10 @@ class DbTubediameter(models.Model):
         return f"{self.diameter}"
 
 
-# Модель представления должностей
 class DbWorkerPost(models.Model):
+    """
+    Модель представления должностей и зарплатами
+    """
     post_name = models.CharField(max_length=100)
     salary = models.IntegerField(default=0)
 
@@ -63,19 +74,10 @@ class DbWorkerPost(models.Model):
         db_table = 'db_worker_post'
 
 
-# Модель представления уникальных участков
-class DbUniqueWorkunits(models.Model):
-    unit_name = models.CharField(unique=True, max_length=255)
-
-    class Meta:
-        db_table = 'db_unique_workunits'
-
-    def __str__(self):
-        return f"{self.id}"
-
-
-# Модель представления работников
 class DbWorker(models.Model):
+    """
+    Модель представления работников
+    """
     fullname = models.CharField(max_length=200)
     post = models.ForeignKey(DbWorkerPost, on_delete=models.RESTRICT, blank=True, null=True)
 
@@ -86,12 +88,32 @@ class DbWorker(models.Model):
         return str(self.id)
 
 
-# Модель представления участков цеха
+class DbUniqueWorkunits(models.Model):
+    """
+    Модель представления уникальных участков
+    """
+    unit_name = models.CharField(unique=True, max_length=255)
+
+    class Meta:
+        db_table = 'db_unique_workunits'
+
+    def __str__(self):
+        return f"{self.id}"
+
+
 class DbWorkunits(models.Model):
+    """
+    Модель представления участков цеха
+    """
     unit_name = models.CharField(unique=True, max_length=255)
     unit_plan = models.IntegerField(blank=True, null=False, default=200)
     online_accessible = models.BooleanField()
     is_productive = models.IntegerField(default=0, null=True, blank=True)
+
+    treated_pipes = models.IntegerField(default=0, null=True, blank=True, db_column='treated_pipes')
+    treated_good_pipes = models.IntegerField(default=0, null=True, blank=True)
+    treated_bad_pipes = models.IntegerField(default=0, null=True, blank=True)
+
     unit_ref = models.IntegerField(unique=True, blank=True, null=True)
     unitref = models.ForeignKey(DbUniqueWorkunits, on_delete=models.RESTRICT, db_column='unitref', blank=True,
                                 null=True)
@@ -103,8 +125,10 @@ class DbWorkunits(models.Model):
         return str(self.unit_ref)
 
 
-# Модель представления замечания по участкам
 class DbProps(models.Model):
+    """
+    Модель представления замечания по участкам
+    """
     unit = models.ForeignKey(DbWorkunits, on_delete=models.RESTRICT)
     prop_text = models.CharField(max_length=255)
 
@@ -112,8 +136,10 @@ class DbProps(models.Model):
         db_table = 'db_props'
 
 
-# Модель представления причин останова участков
 class DbTempdowntime(models.Model):
+    """
+    Модель представления причин останова участков
+    """
     worker = models.ForeignKey(DbWorker, on_delete=models.RESTRICT, to_field='id')
     stop_cause = models.CharField(max_length=255)
     time_of_stoppage = models.DateTimeField(blank=False, null=False, default=datetime.datetime.now)
@@ -127,8 +153,10 @@ class DbTempdowntime(models.Model):
         return f"{self.worker}: {self.stop_cause[:20]} - {self.unit}"
 
 
-# Модель представления совершённых операции
 class DbTubetechoperations(models.Model):
+    """
+    Модель представления совершённых операции
+    """
     diameterref = models.ForeignKey(DbTubediameter, on_delete=models.RESTRICT, db_column='diameterref', blank=True,
                                     null=True)
     unitref = models.ForeignKey(DbWorkunits, on_delete=models.RESTRICT, db_column='unitref', blank=True, null=True,

@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import Operations from "../axiosRequests/axiosRequests";
 import "../styles/Units.css";
-import {Link} from "react-router-dom";
 import TechOp from "./TechOp";
 
 
 const units = new Operations()
 
+// Функция представления всех уникальных участков в цехах
 export default class Units extends Component {
     constructor(props) {
         super(props);
@@ -45,14 +45,14 @@ export default class Units extends Component {
 
     async componentDidMount() {
         await this.unitsData();
-        // this.timer = setInterval(async () => {
-        //     await this.unitsData();
-        // }, 60000)
+        this.timer = setInterval(async () => {
+            await this.unitsData();
+        }, 60000)
     }
 
-    // componentWillUnmount() {
-    //     clearInterval(this.timer)
-    // }
+    componentWillUnmount() {
+        clearInterval(this.timer)
+    }
 
 
     render() {
@@ -65,15 +65,10 @@ export default class Units extends Component {
 
                         if (machine.online_accessible) {
 
-                            this.getCheckProductivity(machine.unit_ref).then((res) => {
-                                return res
-                            })
-
                             return (
                                 <div key={machine.id} className={"main-content"}>
 
-                                    <TechOp machineRef={machine.unit_ref} TechOp={machine.unit_name}
-                                            unitsList={this.props.unitsList}/>
+                                    <TechOp machineRef={machine.unit_ref} TechOp={machine.unit_name} info={machine}/>
 
                                     <div
                                         className={machine.is_productive === 2 ? 'Working' :

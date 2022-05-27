@@ -1,8 +1,11 @@
+"""
+Над админкой не будут вестись кардинальные изменения, поскольку нет надобности
+"""
+
 from django.contrib import admin
 from .models import DbShift, DbWorker, DbWorkerPost, DbWorkunits, DbUniqueWorkunits, DbProps, DbTubediameter, \
     DbTempdowntime, DbStorage, DbTubetechoperations, DbUniqueStorage
 
-# Register your models here.
 
 admin.site.register(DbShift)
 admin.site.register(DbWorker)

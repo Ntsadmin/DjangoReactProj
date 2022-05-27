@@ -2,12 +2,13 @@ import React from "react";
 import {slide as Menu} from 'react-burger-menu';
 import {Link} from "react-router-dom";
 import AuthContext from "../context/AuthContext";
-import shiftPost from "../utils/shiftPost"
 
 import '../styles/Sidebar.css';
 
-
+// Функция и представление боковой части
 function Sidebar() {
+
+    // Смотрим, если пользователь уже авторизован или нет
     let {user, logoutUser} = React.useContext(AuthContext);
 
     return (

@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import Operations from "../axiosRequests/axiosRequests";
 import milliToHMS from "../utils/milliToHMS";
 
 const lastOperation = new Operations()
 
+// Функция для расчёта/показа простоя каждого участка
 export default class CheckLastOperation extends React.Component {
     constructor(props) {
         super(props);

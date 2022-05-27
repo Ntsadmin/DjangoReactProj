@@ -1,38 +1,21 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Route, Routes} from 'react-router-dom';
+
 import '../styles/App.css';
 
 import Header from "../Standart/Header";
 import Footer from "../Standart/Footer";
-import TechOp from "./TechOp";
 import Units from "./Units";
-import DownCause from "./downCause";
-import Sidebar from "./sidebar";
+import DownCause from "./DownCause";
+import Sidebar from "./Sidebar";
 import LoginPage from "./Login";
 
 
 import {AuthProvider} from "../context/AuthContext";
 import PrivateRoute from "../utils/PrivateRoute";
 
-const units = {
-    "Мойка 1": 10,
-    "Мойка 2": 50,
-    "Шаблонирование 1": 11,
-    "Шаблонирование 2": 51,
-    "Муфтоотворот 1": 12,
-    "Муфтоотворот 2": 52,
-    "НК 1": 13,
-    "НК 2": 53,
-    "Токарка 1": 14,
-    "Токарка 2": 54,
-    "Муфтонаворот 1": 15,
-    "Муфтонаворот 2": 55,
-    "Опрессовка 1": 16,
-    "Опрессовка 2": 56,
-    "Маркировка 1": 17,
-    "Маркировка 2": 57
-}
 
+// Функция ответственная за структуру приложении
 function App() {
 
     return (
@@ -62,14 +45,10 @@ function App() {
                                        <DownCause/>
                                    </PrivateRoute>}/>
 
-                            {/*<Route path={"/techOp/:id"}*/}
-                            {/*       element={<PrivateRoute>*/}
-                            {/*           <TechOp unitsList={units} />*/}
-                            {/*       </PrivateRoute>}/>*/}
 
                             <Route exact path={"/"}
                                    element={<PrivateRoute>
-                                       <Units unitsList={units}/>
+                                       <Units/>
                                    </PrivateRoute>}/>
                         </Routes>
                     </AuthProvider>

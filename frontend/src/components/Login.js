@@ -1,8 +1,9 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import AuthContext from "../context/AuthContext";
 
 import "../styles/Login.css";
 
+// Функция и представление для захода пользователей на приложение
 const LoginPage = () => {
 
     let {loginUser} = useContext(AuthContext)

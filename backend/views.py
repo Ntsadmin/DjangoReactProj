@@ -1,106 +1,111 @@
 import datetime
-from django.utils import timezone
 import pytz
-
-from .models import DbUniqueWorkunits, DbWorkunits, DbTubetechoperations, DbTempdowntime, DbShift
-from .serializers import UniqueUnitsSerializer, UnitSerializer, OperationTubeSerializer, DownOpCauseSerializer, \
-    ShiftSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from .models import DbUniqueWorkunits, DbWorkunits, DbTubetechoperations, DbTempdowntime, DbShift
+from .serializers import UniqueUnitsSerializer, UnitSerializer, OperationTubeSerializer, DownOpCauseSerializer, \
+    ShiftSerializer
 
 
-# Уникальные участки по названию и функционалу
 class UniqueUnitView(generics.ListAPIView):
+    """
+    Уникальные участки по названию и ID
+    """
     queryset = DbUniqueWorkunits.objects.all()
     serializer_class = UniqueUnitsSerializer
 
 
-# Все доступные участки в цеху
 class UnitView(generics.ListAPIView):
+    """
+    Все доступные участки в цеху и дополнительной информации по производительности
+    """
+
+    # Тут мы просто сортируем по конкретному полю, чтобы запрос возвращал нам сортированный ответ
     queryset = DbWorkunits.objects.all().order_by('unit_ref')
+
+    # текущая смена + временные отрезки для расчёта производительности
+    last_shift = DbShift.objects.last()
+    zone = pytz.timezone('Europe/Moscow')
+    time_interval = datetime.datetime.now(zone) + datetime.timedelta(hours=1)
+
+    # Итерация по всем значениям, дабы добавить значения в поля количество обработанных труб
+    for query in queryset:
+
+        unit = DbWorkunits.objects.get(unit_ref=query.unit_ref)
+        unit_ref = query.unit_ref
+
+        # Расчёт производительности
+        unique_unit_ref = DbTubetechoperations.objects.all().filter(unitref=unit_ref,
+                                                                    shiftref=last_shift,
+                                                                    optime__gt=time_interval).count()
+
+        # Расчёт суммарное количество труб
+        unit_treated_tubes = DbTubetechoperations.objects.all().filter(unitref=unit_ref,
+                                                                       shiftref=last_shift).count()
+
+        # Расчёт суммарное количество годных труб
+        unit_treated_good_tubes = DbTubetechoperations.objects.all().filter(unitref=unit_ref,
+                                                                            shiftref=last_shift,
+                                                                            opresult=1).count()
+
+        # Расчёт суммарное количество брака
+        unit_treated_bad_tubes = DbTubetechoperations.objects.all().filter(unitref=unit_ref,
+                                                                           shiftref=last_shift,
+                                                                           opresult=2).count()
+
+        # Обновляем значения каждого участка в БД
+        unit.treated_pipes = unit_treated_tubes
+        unit.treated_good_pipes = unit_treated_good_tubes
+        unit.treated_bad_pipes = unit_treated_bad_tubes
+
+        if unique_unit_ref == 0:
+            unit.is_productive = 0
+        elif unique_unit_ref < 10:
+            unit.is_productive = 1
+        else:
+            unit.is_productive = 2
+        unit.save()
+
     serializer_class = UnitSerializer
 
 
-# Получить информацию по каждому участку по отдельности
 @api_view(['GET'])
 def getUnitRef(request, pk):
+    """
+    Получить информацию по каждому участку по отдельности (Дублируем предыдущее вью, но для конкретного участка)
+    """
     if request.method == 'GET':
         try:
-
             Unique = DbWorkunits.objects.all().filter(unit_ref=pk)
-
-            # Получаем далее последние операции за 10 мин, где мы будем сравнивать производительности
-            unit = DbWorkunits.objects.get(unit_ref=pk)
-            zone = pytz.timezone('Europe/Moscow')
-            time_interval = datetime.datetime.now(zone) + datetime.timedelta(hours=1)
-
-            unique_unit_ref = DbTubetechoperations.objects.all().filter(unitref=pk,
-                                                                        optime__gt=time_interval).count()
-
-            if unique_unit_ref == 0:
-                unit.is_productive = 0
-            elif unique_unit_ref < 60:
-                unit.is_productive = 1
-            else:
-                unit.is_productive = 2
-            unit.save()
-
             serializer = UnitSerializer(Unique, many=True)
+
             return Response({'data': serializer.data}, status=status.HTTP_200_OK)
 
         except:
             return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# Причины остановы участков
-class downCauseUnit(generics.ListAPIView):
-    queryset = DbTempdowntime.objects.select_related('worker', 'unit').all()
-    serializer_class = DownOpCauseSerializer
-
-
-# Тестовая вьюха для POST request
-class ShiftUnit(generics.ListCreateAPIView):
-    queryset = DbShift.objects.all()
-    serializer_class = ShiftSerializer
-
-
 class OperationUnit(generics.ListAPIView):
+    """
+    Данные по всем участкам за текущую смену
+    """
     shift_queryset = DbShift.objects.last()
-    time_interval_now = datetime.datetime.now(tz=timezone.utc)
-    time_interval = time_interval_now - datetime.timedelta(hours=10)
-    queryset = DbTubetechoperations.objects.select_related('unitref').all().filter(optime__gt=time_interval,
-                                                                                   shiftref=shift_queryset)
-
+    queryset = DbTubetechoperations.objects.select_related('unitref').all().filter(shiftref=shift_queryset)
     serializer_class = OperationTubeSerializer
 
 
-# # Получить все совершённые операции
-# @api_view(['GET'])
-# def Operationunits(request):
-#     if request.method == 'GET':
-#         try:
-#             shift_queryset = DbShift.objects.last()
-#             time_interval = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(hours=12)
-#             Tubes = DbTubetechoperations.objects.select_related('unitref').all().filter(optime__gt=time_interval,
-#                                                                                         shiftref=shift_queryset)
-#             serializer = OperationTubeSerializer(Tubes, many=True)
-#             return Response({'data': serializer.data}, status=status.HTTP_200_OK)
-#         except:
-#             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-# Получить все совершённые операции конкретным участком
 @api_view(['GET'])
 def OpUnitRef(request, pk):
+    """
+    Получить все совершённые операции конкретным участком
+    """
     if request.method == 'GET':
         try:
             shift_queryset = DbShift.objects.last()
-            time_interval = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(hours=10)
             UnitRef = DbTubetechoperations.objects.select_related('unitref').all().filter(unitref=pk,
-                                                                                          optime__gt=time_interval,
                                                                                           shiftref=shift_queryset)
             serializer = OperationTubeSerializer(UnitRef, many=True)
             return Response({'data': serializer.data}, status=status.HTTP_200_OK)
@@ -108,9 +113,11 @@ def OpUnitRef(request, pk):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# Получить все последнюю операцию конкретным участком
 @api_view(['GET'])
 def OpUnitRefLastElement(request, pk):
+    """
+    Получить последнюю операцию совершённую на уникальном участке
+    """
     if request.method == 'GET':
         try:
             UnitRef = DbTubetechoperations.objects.all().filter(unitref=pk)
@@ -121,9 +128,27 @@ def OpUnitRefLastElement(request, pk):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# Получить и записать причины остановы конкретного участка
+class ShiftUnit(generics.ListCreateAPIView):
+    """
+    Тестовая вьюха для GET-POST request по сменам
+    """
+    queryset = DbShift.objects.all()
+    serializer_class = ShiftSerializer
+
+
+class downCauseUnit(generics.ListAPIView):
+    """
+    Причины остановы участков
+    """
+    queryset = DbTempdowntime.objects.select_related('worker', 'unit').all()
+    serializer_class = DownOpCauseSerializer
+
+
 @api_view(['GET', 'POST'])
 def downCauseOp(request, pk):
+    """
+    Получить и записать причины остановы уникального участка
+    """
     if request.method == 'GET':
         try:
             Cause = DbTempdowntime.objects.all().filter(unit=pk)
@@ -150,10 +175,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-
-        # Add custom claims
         token['username'] = user.username
-        # ...
 
         return token
 

@@ -2,36 +2,51 @@ from rest_framework import serializers
 from .models import DbUniqueWorkunits, DbWorkunits, DbTubetechoperations, DbTempdowntime, DbShift
 
 
-# API представления для уникальных участков
 class UniqueUnitsSerializer(serializers.ModelSerializer):
+    """
+    API представления для уникальных участков
+    """
+
     class Meta:
         model = DbUniqueWorkunits
         fields = ('id', 'unit_name')
 
 
-# API представления для каждого участка
 class UnitSerializer(serializers.ModelSerializer):
+    """
+    API представления для каждого участка
+    """
+
     class Meta:
         model = DbWorkunits
         fields = '__all__'
 
 
-# API представления для совершённых операции
 class OperationTubeSerializer(serializers.ModelSerializer):
+    """
+    API представления для совершённых операции
+    """
+
     class Meta:
         model = DbTubetechoperations
         fields = '__all__'
 
 
-# API представления для причин останов участков
 class DownOpCauseSerializer(serializers.ModelSerializer):
+    """
+    API представления для причин останов участков
+    """
+
     class Meta:
         model = DbTempdowntime
         fields = ('id', 'worker', 'unit', 'stop_cause', 'time_of_stoppage', 'time_of_resume')
 
 
-# API представления для каждой регистрированной смены
 class ShiftSerializer(serializers.ModelSerializer):
+    """
+    API представления для каждой регистрированной смены
+    """
+
     class Meta:
         model = DbShift
         fields = '__all__'

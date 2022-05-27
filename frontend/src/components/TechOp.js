@@ -1,18 +1,14 @@
 import React, {useEffect, useState} from "react";
-import Operations from "../axiosRequests/axiosRequests";
 import {Table} from "react-bootstrap";
 
 import "../styles/TechOp.css";
 
 import techResultTable from "../tableOperationTables/techResultTable";
 
-
 import NoContent from "../Standart/NoContent";
 import CheckLastOperation from "./checkLastOperation";
 
-
-const Operation = new Operations()
-
+// Функция представления данные в виде таблицы, а также время простоя
 function TechOp(props) {
 
     const params = props.machineRef
@@ -24,24 +20,15 @@ function TechOp(props) {
     const [availableMachine, setAvailableMachine] = useState(false);
 
 
-    async function getOperations() {
-        if (props.unitsList[machineRef] == params) {
-            setAvailableMachine(true)
-            const responseData = await Operation.getOperations(params)
-            const resultTableData = responseData.data.data
-            techResultTable(resultTableData, machineRef, params)
-
-        }
-    }
-
 
     useEffect( () => {
-        getOperations();
+        setAvailableMachine(true);
+        techResultTable(props.info, machineRef, params)
 
-        const timer = setInterval(async () => {
-            await getOperations()
-        }, 6000);
-        return () => clearInterval(timer);
+        // const timer = setInterval(async () => {
+        //     await getOperations()
+        // }, 60000);
+        // return () => clearInterval(timer);
 
     }, [])
 
