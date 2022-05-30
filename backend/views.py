@@ -25,51 +25,47 @@ class UnitView(generics.ListAPIView):
 
     # Тут мы просто сортируем по конкретному полю, чтобы запрос возвращал нам сортированный ответ
     queryset = DbWorkunits.objects.all().order_by('unit_ref')
-
-    # текущая смена + временные отрезки для расчёта производительности
-    last_shift = DbShift.objects.last()
-    zone = pytz.timezone('Europe/Moscow')
-    time_interval = datetime.datetime.now(zone) + datetime.timedelta(hours=1)
-
-    # Итерация по всем значениям, дабы добавить значения в поля количество обработанных труб
-    for query in queryset:
-
-        unit = DbWorkunits.objects.get(unit_ref=query.unit_ref)
-        unit_ref = query.unit_ref
-
-        # Расчёт производительности
-        unique_unit_ref = DbTubetechoperations.objects.all().filter(unitref=unit_ref,
-                                                                    shiftref=last_shift,
-                                                                    optime__gt=time_interval).count()
-
-        # Расчёт суммарное количество труб
-        unit_treated_tubes = DbTubetechoperations.objects.all().filter(unitref=unit_ref,
-                                                                       shiftref=last_shift).count()
-
-        # Расчёт суммарное количество годных труб
-        unit_treated_good_tubes = DbTubetechoperations.objects.all().filter(unitref=unit_ref,
-                                                                            shiftref=last_shift,
-                                                                            opresult=1).count()
-
-        # Расчёт суммарное количество брака
-        unit_treated_bad_tubes = DbTubetechoperations.objects.all().filter(unitref=unit_ref,
-                                                                           shiftref=last_shift,
-                                                                           opresult=2).count()
-
-        # Обновляем значения каждого участка в БД
-        unit.treated_pipes = unit_treated_tubes
-        unit.treated_good_pipes = unit_treated_good_tubes
-        unit.treated_bad_pipes = unit_treated_bad_tubes
-
-        if unique_unit_ref == 0:
-            unit.is_productive = 0
-        elif unique_unit_ref < 10:
-            unit.is_productive = 1
-        else:
-            unit.is_productive = 2
-        unit.save()
-
     serializer_class = UnitSerializer
+
+
+@api_view(['GET'])
+def getUnitView(request):
+    if request.method == 'GET':
+        units = DbWorkunits.objects.all().filter(online_accessible=True).order_by('unit_ref')
+        last_shift = DbShift.objects.last()
+
+        zone = pytz.timezone('Europe/Moscow')
+        time_interval = datetime.datetime.now(zone) + datetime.timedelta(hours=1)
+
+        for unit in units:
+
+            machine = DbWorkunits.objects.get(unit_ref=unit.unit_ref)
+
+            # Расчёт производительности
+            unique_unit_ref = DbTubetechoperations.objects.select_related('unitref'). \
+                all().filter(unitref=unit.unit_ref,
+                             shiftref=last_shift,
+                             optime__gt=time_interval).count()
+
+            # Расчёт суммарное количество труб
+            unit_treated_tubes = DbTubetechoperations.objects.select_related('unitref'). \
+                all().filter(unitref=unit.unit_ref,
+                             shiftref=last_shift).count()
+
+            # Обновляем значения каждого участка в БД
+            machine.total_treated_tubes = unit_treated_tubes
+
+            if unique_unit_ref == 0:
+                machine.is_productive = 0
+            elif unique_unit_ref < 10:
+                machine.is_productive = 1
+            else:
+                machine.is_productive = 2
+
+            machine.save()
+
+        serializer = UnitSerializer(units, many=True)
+        return Response({'data': serializer.data}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -86,6 +82,19 @@ def getUnitRef(request, pk):
 
         except:
             return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+def OperationFullUnits(request):
+    if request.method == 'GET':
+        try:
+            last_shift = DbShift.objects.last()
+            queryset = DbTubetechoperations.objects.select_related('unitref').all().filter(shiftref=last_shift)
+            serializer = OperationTubeSerializer(queryset, many=True)
+
+            return Response({'data': serializer.data}, status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class OperationUnit(generics.ListAPIView):

@@ -3,13 +3,13 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from .views import UniqueUnitView, UnitView, OperationUnit, OpUnitRef, getUnitRef, downCauseOp, downCauseUnit, \
-    ShiftUnit, MyTokenObtainPairView, OpUnitRefLastElement
+    ShiftUnit, MyTokenObtainPairView, OpUnitRefLastElement, getUnitView, OperationFullUnits
 
 urlpatterns = [
     path('uniqueunits/', UniqueUnitView.as_view(), name='unique_units'),
     path('units/', UnitView.as_view(), name='units'),
     path(r'units/<int:pk>', getUnitRef, name='unique_ref'),
-    path(r'operations/', OperationUnit.as_view(), name='Operations'),
+    path(r'operations/', OperationFullUnits, name='Operations'),
     path(r'operations/<int:pk>/', OpUnitRef, name='op_unit_ref'),
     path(r'lastoperation/<int:pk>', OpUnitRefLastElement, name='last_unit_operation'),
     path('downcause/', downCauseUnit.as_view(), name='cause'),

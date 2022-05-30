@@ -9,10 +9,10 @@ import NoContent from "../Standart/NoContent";
 import CheckLastOperation from "./checkLastOperation";
 
 // Функция представления данные в виде таблицы, а также время простоя
-function TechOp(props) {
+function TechOp({machineReference, TechOp, info}) {
 
-    const params = props.machineRef
-    const machineRef = props.TechOp
+    const params = machineReference
+    const machineName = TechOp
 
     const currentMoscowTime = new Date();
     currentMoscowTime.setHours(currentMoscowTime.getHours() + 2);
@@ -20,25 +20,17 @@ function TechOp(props) {
     const [availableMachine, setAvailableMachine] = useState(false);
 
 
-
-    useEffect( () => {
+    useEffect(() => {
         setAvailableMachine(true);
-        techResultTable(props.info, machineRef, params)
-
-        // const timer = setInterval(async () => {
-        //     await getOperations()
-        // }, 60000);
-        // return () => clearInterval(timer);
-
+        techResultTable(info, machineName, params)
     }, [])
 
     if (availableMachine) {
         return (
             <div className={"Data"}>
                 <h1>
-                    {machineRef}
+                    {machineName}
                 </h1>
-
                 <div>
                     <Table className={"Datatable"}>
                         <thead>

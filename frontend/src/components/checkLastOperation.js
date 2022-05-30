@@ -18,6 +18,8 @@ export default class CheckLastOperation extends React.Component {
     }
 
     async unitsData() {
+        this.currentTime = new Date();
+        this.currentMoscowTime = this.currentTime.setHours(this.currentTime.getHours() + 2)
         const Response = await lastOperation.getLastOperation(this.props.unitRef)
         if (Response.status > 400) {
             return this.setState(() => {
@@ -37,15 +39,8 @@ export default class CheckLastOperation extends React.Component {
 
     async componentDidMount() {
         await this.unitsData();
-        this.timer = setInterval(async () => {
-            await this.unitsData();
-        }, 60000)
-
     }
 
-    componentWillUnmount() {
-        clearInterval(this.timer)
-    }
 
 
     render() {

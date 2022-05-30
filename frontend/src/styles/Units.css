@@ -3,14 +3,12 @@
     justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
-    padding-top: 5rem;
+    padding-top: 3rem;
 }
 
 .main-content {
     display: block;
-    padding: 2rem 4rem 2rem 4rem;
-    border-radius: 5px;
-    margin: 1.5rem;
+    padding: 1rem 1rem 1rem 1rem;
     font-size: 18px;
     background-color: rgba(16, 35, 77, 0.45);
     background-clip: border-box;

@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Operations from "../axiosRequests/axiosRequests";
 import "../styles/Units.css";
 import TechOp from "./TechOp";
+import NoContent from "../Standart/NoContent";
 
 
 const units = new Operations()
@@ -30,6 +31,33 @@ export default class Units extends Component {
 
                 return {
                     data: Response.data,
+
+                }
+            })
+        }
+    }
+
+
+    async getFullOperations() {
+
+        const operationsResponse = await units.getFullOperations()
+        const operationsResults = operationsResponse.data
+
+        this.setState(() => {
+            return {
+                loaded: false
+            }
+        })
+
+
+        if (operationsResponse.status > 400) {
+            return this.setState(() => {
+                return {placeholder: "Something went wrong!"}
+            })
+        } else {
+            return this.setState(() => {
+                return {
+                    operations: operationsResults.data,
                     loaded: true
                 }
             })
@@ -37,18 +65,13 @@ export default class Units extends Component {
     }
 
 
-    async getCheckProductivity(pk) {
-        const productivityResponse = await units.getProductivity(pk);
-        return productivityResponse.data
-    }
-
-
     async componentDidMount() {
-        await this.unitsData();
+        await Promise.all([this.unitsData(), this.getFullOperations()]);
         this.timer = setInterval(async () => {
-            await this.unitsData();
+            await this.getFullOperations();
         }, 60000)
     }
+
 
     componentWillUnmount() {
         clearInterval(this.timer)
@@ -56,32 +79,30 @@ export default class Units extends Component {
 
 
     render() {
-        if (!this.state.loaded) return null
-        else {
-            return (
-                <div className="bg_image">
+        if (!this.state.loaded) {
+            return null
+        }
+        return (
+            <div className="bg_image">
 
-                    {this.state.data.map(machine => {
+                {this.state.loaded ? this.state.data.map(machine => {
 
-                        if (machine.online_accessible) {
+                    if (machine.online_accessible) {
 
-                            return (
-                                <div key={machine.id} className={"main-content"}>
+                        return (
+                            <div key={machine.id} className={"main-content"}>
 
-                                    <TechOp machineRef={machine.unit_ref} TechOp={machine.unit_name} info={machine}/>
-
-                                    <div
-                                        className={machine.is_productive === 2 ? 'Working' :
-                                            machine.is_productive === 1 ? "semi-working" :
-                                                "notWorking"}> </div>
-                                </div>
-                            );
-                        }
-                    })}
+                                <TechOp machineReference={machine.unit_ref} TechOp={machine.unit_name}
+                                        info={this.state.operations}/>
+                            </div>
+                        );
+                    }
+                }) : <div>
 
                 </div>
-            )
-        }
+                }
 
+            </div>
+        )
     }
 }
