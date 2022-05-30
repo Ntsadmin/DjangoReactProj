@@ -30,23 +30,34 @@ export default class Units extends Component {
 
                 return {
                     data: Response.data,
-                    loaded: true
-                }
+                    
+		}
             })
         }
     }
 
 
-    async getCheckProductivity(pk) {
-        const productivityResponse = await units.getProductivity(pk);
-        return productivityResponse.data
+    async getFullOperations() {
+        const operationsResponse = await units.getFullOperations();
+        if (operationsResponse.status > 400) {
+		return this.setState( () => {
+			return {placeholder: "Something went wrong!"}
+		})
+	} else {
+		return this.setState( () => {
+			return {
+				operations: operationsResponse.data,
+				loaded: true
+			}
+		})
+    	}
     }
 
 
     async componentDidMount() {
-        await this.unitsData();
+        await Promise.all([this.unitsData(), this.getFullOperations()]);
         this.timer = setInterval(async () => {
-            await this.unitsData();
+            await Promise.all([this.unitsData(), this.getFullOperations()]);
         }, 60000)
     }
 
@@ -68,12 +79,8 @@ export default class Units extends Component {
                             return (
                                 <div key={machine.id} className={"main-content"}>
 
-                                    <TechOp machineRef={machine.unit_ref} TechOp={machine.unit_name} info={machine}/>
+                                    <TechOp machineRef={machine.unit_ref} TechOp={machine.unit_name} info={this.state.operations}/>
 
-                                    <div
-                                        className={machine.is_productive === 2 ? 'Working' :
-                                            machine.is_productive === 1 ? "semi-working" :
-                                                "notWorking"}> </div>
                                 </div>
                             );
                         }

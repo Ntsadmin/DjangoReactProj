@@ -9,7 +9,7 @@ import '../styles/Sidebar.css';
 function Sidebar() {
 
     // Смотрим, если пользователь уже авторизован или нет
-    let {user, logoutUser} = React.useContext(AuthContext);
+    	let {user, logoutUser} = React.useContext(AuthContext);
 
     return (
         <Menu>

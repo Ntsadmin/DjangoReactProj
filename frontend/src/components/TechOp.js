@@ -25,10 +25,10 @@ function TechOp(props) {
         setAvailableMachine(true);
         techResultTable(props.info, machineRef, params)
 
-        // const timer = setInterval(async () => {
-        //     await getOperations()
-        // }, 60000);
-        // return () => clearInterval(timer);
+        const timer = setInterval(async () => {
+		techResultTable(props.info, machineRef, params)
+        }, 60000);
+        return () => clearInterval(timer);
 
     }, [])
 

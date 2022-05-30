@@ -108,12 +108,6 @@ class DbWorkunits(models.Model):
     unit_name = models.CharField(unique=True, max_length=255)
     unit_plan = models.IntegerField(blank=True, null=False, default=200)
     online_accessible = models.BooleanField()
-    is_productive = models.IntegerField(default=0, null=True, blank=True)
-
-    treated_pipes = models.IntegerField(default=0, null=True, blank=True, db_column='treated_pipes')
-    treated_good_pipes = models.IntegerField(default=0, null=True, blank=True)
-    treated_bad_pipes = models.IntegerField(default=0, null=True, blank=True)
-
     unit_ref = models.IntegerField(unique=True, blank=True, null=True)
     unitref = models.ForeignKey(DbUniqueWorkunits, on_delete=models.RESTRICT, db_column='unitref', blank=True,
                                 null=True)

@@ -3,15 +3,27 @@ function techResultTable(ResponseData, machineName, unit_ref) {
     setTimeout(() => {
             const tableData = ResponseData;
 
-
-            let all_tubes = ResponseData.treated_pipes;
-            let good_tubes = ResponseData.treated_good_pipes;
-            let bad_tubes = ResponseData.treated_bad_pipes;
+            let all_tubes = 0;
+            let good_tubes = 0;
+            let bad_tubes = 0;
 
             let table = document.getElementById("tbody-content-results" + unit_ref);
             let k = "";
             table.innerHTML = k;
             try {
+		    if (tableData.length) {
+			    for (let i = 0; i < tableData.length; i++) {
+				    if (tableData[i]['unitref'] === unit_ref) {
+					    all_tubes += 1;
+
+					    if (tableData[i]['opresult'] === 1) {
+						    good_tubes += 1;
+					    } else {
+						    bad_tubes += 1;
+					    }
+				    }
+			    }
+		    }
 
                 k += '<tr>';
                 k += '<td>' + machineName + '</td>';
