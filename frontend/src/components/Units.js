@@ -81,7 +81,8 @@ export default class Units extends Component {
     async componentDidMount() {
         await Promise.all([this.unitsData(), this.getFullOperations()]);
         this.timer = setInterval(async () => {
-            await Promise.all([this.getFullOperations(), this.unitsData()]);
+            await this.unitsData();
+            await this.getFullOperations();
         }, 15000)
     }
 

@@ -77,6 +77,14 @@ h1 {
     box-shadow: 0px 0px 40px 15px  #00ff00;
 }
 
+.noCircle {
+    background-image: radial-gradient(ellipse at 50px 10px, #ffffff 0%, #fff 5%, grey 100%);
+    border-radius: 50%;
+    height: 10px;
+    position: relative;
+    width: 10px;
+}
+
 
 .clock-box {
     background: black;

@@ -25,6 +25,7 @@ function TechOp({machine, info}) {
         setAvailableMachine(true);
         techResultTable(info, machineName, params, machine.is_productive)
         if ('noChanges' in machine && !machine.noChanges) {
+            // console.log("changed" + machineName)
             setChanges(true)
             setInterval(() => {
                 setChanges(false)
