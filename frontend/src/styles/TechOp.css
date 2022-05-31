@@ -56,28 +56,25 @@ h1 {
     color: rgb(97, 66, 152);
 }
 
-.myButton {
-    background: #459ec7 linear-gradient(to bottom, #459ec7 5%, #982abd 100%);
-    border-radius: 15px;
-    border: 1px solid #195bab;
-    display: inline-block;
-    justify-content: center;
-    cursor: pointer;
-    color: #ffffff;
-    font-family: "Times New Roman", sans-serif;
-    font-size: 14px;
-    padding: 10px 20px;
-    text-decoration: none;
-    text-shadow: 0px 1px 0px #c72493;
+.circle::after {
+    background: white none repeat scroll 0 0;
+    border-radius: 50%;
+    content: " ";
+    display: block;
+    height: 5px;
+    opacity: 0.2;
+    position: absolute;
+    width: 5px;
+    left: 2px;
 }
 
-.myButton:hover {
-    background: #982abd linear-gradient(to bottom, #982abd 5%, #459ec7 100%);
-}
-
-.myButton:active {
+.circle {
+    background-image: radial-gradient(ellipse at 50px 10px, #ffffff 0%, #fff 5%, #00ff00 100%);
+    border-radius: 50%;
+    height: 10px;
     position: relative;
-    top: 1px;
+    width: 10px;
+    box-shadow: 0px 0px 40px 15px  #00ff00;
 }
 
 

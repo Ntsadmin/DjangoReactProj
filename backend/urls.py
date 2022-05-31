@@ -7,7 +7,7 @@ from .views import UniqueUnitView, UnitView, OperationUnit, OpUnitRef, getUnitRe
 
 urlpatterns = [
     path('uniqueunits/', UniqueUnitView.as_view(), name='unique_units'),
-    path('units/', UnitView.as_view(), name='units'),
+    path('units/', getUnitView, name='units'),
     path(r'units/<int:pk>', getUnitRef, name='unique_ref'),
     path(r'operations/', OperationFullUnits, name='Operations'),
     path(r'operations/<int:pk>/', OpUnitRef, name='op_unit_ref'),

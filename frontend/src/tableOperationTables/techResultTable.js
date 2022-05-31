@@ -1,4 +1,4 @@
-function techResultTable(ResponseData, machineName, unit_ref) {
+function techResultTable(ResponseData, machineName, unit_ref, productivity) {
 
     setTimeout(() => {
 
@@ -33,6 +33,7 @@ function techResultTable(ResponseData, machineName, unit_ref) {
             k += '<td>' + all_tubes + '</td>';
             k += '<td>' + good_tubes + '</td>';
             k += '<td>' + bad_tubes + '</td>';
+            k += '<td>' + productivity + '</td>';
             k += '</tr>';
             k += '</tr>';
             table.innerHTML += k;

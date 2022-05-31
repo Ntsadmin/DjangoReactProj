@@ -9,20 +9,29 @@ import NoContent from "../Standart/NoContent";
 import CheckLastOperation from "./checkLastOperation";
 
 // Функция представления данные в виде таблицы, а также время простоя
-function TechOp({machineReference, TechOp, info}) {
+function TechOp({machine, info}) {
 
-    const params = machineReference
-    const machineName = TechOp
+    const params = machine.unit_ref
+    const machineName = machine.unit_name
 
     const currentMoscowTime = new Date();
     currentMoscowTime.setHours(currentMoscowTime.getHours() + 2);
 
     const [availableMachine, setAvailableMachine] = useState(false);
+    const [changes, setChanges] = useState(false)
 
 
     useEffect(() => {
         setAvailableMachine(true);
-        techResultTable(info, machineName, params)
+        techResultTable(info, machineName, params, machine.is_productive)
+        if ('noChanges' in machine && !machine.noChanges) {
+            setChanges(true)
+            setInterval(() => {
+                setChanges(false)
+            }, 3000)
+        } else {
+            setChanges(false)
+        }
     }, [])
 
     if (availableMachine) {
@@ -47,10 +56,17 @@ function TechOp({machineReference, TechOp, info}) {
                             <th>
                                 Количество брака
                             </th>
+                            <th>
+                                Производительность (15 мин)
+                            </th>
                         </tr>
                         </thead>
                         <tbody id={"tbody-content-results" + params}/>
                     </Table>
+                </div>
+
+                <div className={changes ? "circle" : "noCircle"}>
+
                 </div>
 
                 <div className={"clock-box"}>

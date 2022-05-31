@@ -31,36 +31,26 @@ class UnitView(generics.ListAPIView):
 @api_view(['GET'])
 def getUnitView(request):
     if request.method == 'GET':
-        units = DbWorkunits.objects.all().filter(online_accessible=True).order_by('unit_ref')
+        units = DbWorkunits.objects.select_related('unitref').all().filter(online_accessible=True).order_by('unit_ref')
         last_shift = DbShift.objects.last()
 
         zone = pytz.timezone('Europe/Moscow')
-        time_interval = datetime.datetime.now(zone) + datetime.timedelta(hours=1)
+        time_interval = datetime.datetime.now(zone) + datetime.timedelta(hours=1.75)
 
         for unit in units:
-
             machine = DbWorkunits.objects.get(unit_ref=unit.unit_ref)
 
-            # Расчёт производительности
-            unique_unit_ref = DbTubetechoperations.objects.select_related('unitref'). \
-                all().filter(unitref=unit.unit_ref,
-                             shiftref=last_shift,
-                             optime__gt=time_interval).count()
-
+            # Обновляем значения каждого участка в БД
             # Расчёт суммарное количество труб
-            unit_treated_tubes = DbTubetechoperations.objects.select_related('unitref'). \
+            machine.total_treated_tubes = DbTubetechoperations.objects.select_related('unitref'). \
                 all().filter(unitref=unit.unit_ref,
                              shiftref=last_shift).count()
 
-            # Обновляем значения каждого участка в БД
-            machine.total_treated_tubes = unit_treated_tubes
-
-            if unique_unit_ref == 0:
-                machine.is_productive = 0
-            elif unique_unit_ref < 10:
-                machine.is_productive = 1
-            else:
-                machine.is_productive = 2
+            # Расчёт производительности
+            machine.is_productive = DbTubetechoperations.objects.select_related('unitref'). \
+                all().filter(unitref=unit.unit_ref,
+                             shiftref=last_shift,
+                             optime__gt=time_interval).count()
 
             machine.save()
 

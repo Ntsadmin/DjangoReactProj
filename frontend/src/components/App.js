@@ -5,7 +5,6 @@ import '../styles/App.css';
 
 import Footer from "../Standart/Footer";
 import Units from "./Units";
-import DownCause from "./DownCause";
 import LoginPage from "./Login";
 import PrivateRoute from "../utils/PrivateRoute";
 
@@ -20,12 +19,6 @@ function App() {
                         <Routes>
                             <Route path={"/login/"}
                                    element={<LoginPage/>}/>
-
-                            <Route path={"/cause/"}
-                                   element={<PrivateRoute>
-                                       <DownCause/>
-                                   </PrivateRoute>}/>
-
 
                             <Route exact path={"/"}
                                    element={<PrivateRoute>

@@ -6,7 +6,7 @@ import "../styles/NoContent.css";
 const NoContent = () => {
     return(
         <div className={"No-Content"}>
-            There is no content within this page!
+
         </div>
     )
 }
