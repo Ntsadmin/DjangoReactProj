@@ -15,7 +15,7 @@ h1 {
 }
 
 
-.Datatable {
+.DatatableResult {
     border-collapse: collapse;
     margin: 1.5rem 0;
     font-size: 0.9em;
@@ -25,33 +25,25 @@ h1 {
 }
 
 
-.Datatable thead tr {
+.DatatableResult thead tr {
     background-color: #614298;
     color: #ffffff;
     text-align: left;
 }
 
-.Datatable tr:hover td {
+.DatatableResult tr:hover td {
     background-color: #634673;
 }
 
-.Datatable th {
+
+.DatatableResult td {
     text-align: center;
     padding: 0.75rem 1rem;
     color: #ffffff;
 }
 
-.Datatable td {
-    text-align: center;
-    padding: 0.75rem 1rem;
-    color: #ffffff;
-}
 
-.Datatable tbody tr {
-    border-bottom: 1px solid #dddddd;
-}
-
-.Datatable tbody tr.active-row {
+.DatatableResult tbody tr.active-row {
     font-weight: bold;
     color: rgb(97, 66, 152);
 }
@@ -61,34 +53,27 @@ h1 {
     border-radius: 50%;
     content: " ";
     display: block;
-    height: 5px;
+    height: 2px;
     opacity: 0.2;
     position: absolute;
-    width: 5px;
+    width: 2px;
     left: 2px;
 }
 
-.circle {
+.changed {
     background-image: radial-gradient(ellipse at 50px 10px, #ffffff 0%, #fff 5%, #00ff00 100%);
-    border-radius: 50%;
-    height: 10px;
-    position: relative;
-    width: 10px;
     box-shadow: 0px 0px 40px 15px  #00ff00;
 }
 
-.noCircle {
+.notChanged {
     background-image: radial-gradient(ellipse at 50px 10px, #ffffff 0%, #fff 5%, grey 100%);
-    border-radius: 50%;
-    height: 10px;
-    position: relative;
-    width: 10px;
 }
 
 
 .clock-box {
     background: black;
     color: #ffffff;
+    text-align: center;
     box-shadow: 0 0 5px rgba(87, 45, 182, 0.71),
     0 0 5px rgba(87, 45, 182, 0.76),
     0 0 5px rgba(87, 45, 182, 0.82),

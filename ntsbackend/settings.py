@@ -17,7 +17,7 @@ DEBUG = True
 
 PORT = config('PORT')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.100.1.35']
 
 # Application definition
 
@@ -96,15 +96,16 @@ MIDDLEWARE = [
 INTERNAL_IPS = [
     # ...
     "127.0.0.1",
+    '192.100.1.35',
     # ...
 ]
-
 
 # Open the port where the frontend will start
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:7000',
     'http://127.0.0.1:7000',
     'http://localhost:3000',
+    'http://192.100.1.35:7000',
     'http://127.0.0.1:3000',
     'http://localhost:8080',
     'http://127.0.0.1:8080',
@@ -113,6 +114,7 @@ CORS_ORIGIN_WHITELIST = (
 CSRF_TRUSTED_ORIGINS = ['http://localhost:7000',
                         'http://127.0.0.1:7000',
                         'http://localhost:3000',
+                        'http://192.100.1.35:7000',
                         'http://127.0.0.1:3000',
                         'http://localhost:8080',
                         'http://127.0.0.1:8080', ]
@@ -156,15 +158,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ntsbackend.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -176,9 +169,7 @@ DATABASES = {
     }
 }
 
-
 # Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {

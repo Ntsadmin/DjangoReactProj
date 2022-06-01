@@ -3,12 +3,15 @@ import Operations from "../axiosRequests/axiosRequests";
 import "../styles/Units.css";
 import TechOp from "./TechOp";
 import NoContent from "../Standart/NoContent";
+import {Table} from "react-bootstrap";
 
 
 const units = new Operations()
 
 // Функция представления всех уникальных участков в цехах
 export default class Units extends Component {
+    _isMounted = false;
+
     constructor(props) {
         super(props);
         this.currentDate = new Date()
@@ -33,27 +36,30 @@ export default class Units extends Component {
     async unitsData() {
         const Response = await units.getUnits()
         const responseUnitResult = Response.data
+        console.log("updated!")
 
-        await this.changesCheckUnits(this.state.data, responseUnitResult.data)
-        this.setState(() => {
-            return {
-                loaded: false
+        // await this.changesCheckUnits(this.state.data, responseUnitResult.data)
+        // this.setState(() => {
+        //     return {
+        //         loaded: false
+        //     }
+        // })
+
+        if (this._isMounted) {
+            if (Response.status > 400) {
+                return this.setState(() => {
+                    return {placeholder: "Something went wrong!"}
+                })
+            } else {
+                return this.setState(() => {
+
+                    return {
+                        data: responseUnitResult.data,
+                        loaded: true
+
+                    }
+                })
             }
-        })
-
-        if (Response.status > 400) {
-            return this.setState(() => {
-                return {placeholder: "Something went wrong!"}
-            })
-        } else {
-            return this.setState(() => {
-
-                return {
-                    data: responseUnitResult.data,
-                    loaded: true
-
-                }
-            })
         }
     }
 
@@ -63,31 +69,36 @@ export default class Units extends Component {
         const operationsResponse = await units.getFullOperations()
         const operationsResults = operationsResponse.data
 
-        if (operationsResponse.status > 400) {
-            return this.setState(() => {
-                return {placeholder: "Something went wrong!"}
-            })
-        } else {
-            return this.setState(() => {
-                return {
-                    operations: operationsResults.data,
+        if (this._isMounted) {
+            if (operationsResponse.status > 400) {
+                return this.setState(() => {
+                    return {placeholder: "Something went wrong!"}
+                })
+            } else {
+                return this.setState(() => {
+                    return {
+                        operations: operationsResults.data,
 
-                }
-            })
+                    }
+                })
+            }
         }
     }
 
 
     async componentDidMount() {
+        this._isMounted = true
         await Promise.all([this.unitsData(), this.getFullOperations()]);
         this.timer = setInterval(async () => {
-            await this.unitsData();
             await this.getFullOperations();
+            await this.unitsData();
+
         }, 15000)
     }
 
 
     componentWillUnmount() {
+        this._isMounted = false;
         clearInterval(this.timer)
     }
 
@@ -100,23 +111,44 @@ export default class Units extends Component {
         }
         return (
             <div className="bg_image">
+                <Table className={"Datatable"}>
+                    <thead>
+                    <tr>
+                        <th>
+                            Название установки
+                        </th>
+                        <th>
+                            Общее количество труб
+                        </th>
+                        <th>
+                            Количество годных труб
+                        </th>
+                        <th>
+                            Количество брака
+                        </th>
+                        <th>
+                            Производительность (шт./ч)
+                        </th>
+                        <th>
+                            Суммарное время простоя
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody className={"Datatable"}>
+                    {this.state.loaded ? this.state.data.map(machine => {
 
-                {this.state.loaded ? this.state.data.map(machine => {
+                        if (machine.online_accessible) {
 
-                    if (machine.online_accessible) {
+                            return (
+                                <TechOp key={machine.id} machine={machine} info={this.state.operations}/>
+                            );
+                        }
+                    }) : <tr>
 
-                        return (
-                            <div key={machine.id} className={"main-content"}>
+                    </tr>}
 
-                                <TechOp machine={machine} info={this.state.operations}/>
-                            </div>
-                        );
-                    }
-                }) : <div>
-
-                </div>
-                }
-
+                    < /tbody>
+                </Table>
             </div>
         )
     }

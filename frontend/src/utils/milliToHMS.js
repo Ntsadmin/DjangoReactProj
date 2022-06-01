@@ -1,5 +1,6 @@
 function msToTime(duration) {
-    if (duration > 0) {
+    const availableMinutes = duration / 1000 / 60
+    if (availableMinutes > 5) {
         let milliseconds = Math.floor((duration % 1000) / 100),
             seconds = Math.floor((duration / 1000) % 60),
             minutes = Math.floor((duration / (1000 * 60)) % 60),
@@ -9,7 +10,7 @@ function msToTime(duration) {
         minutes = (minutes < 10) ? "0" + minutes : minutes;
         seconds = (seconds < 10) ? "0" + seconds : seconds;
 
-        return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+        return hours + ":" + minutes + ":" + seconds;
     } else {
         return "00:00:00"
     }

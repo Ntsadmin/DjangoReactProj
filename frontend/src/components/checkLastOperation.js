@@ -47,7 +47,7 @@ export default class CheckLastOperation extends React.Component {
         if (this.state.loaded) {
             return (
                 <div>
-                    Время простоя: {this.state.time}
+                    {this.state.time}
                 </div>
             )
         } else {

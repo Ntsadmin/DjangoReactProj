@@ -65,3 +65,45 @@ a::before {
     background: #ec021b;
 }
 
+
+.Datatable {
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 1em;
+    font-family: "Times New Roman", sans-serif;
+    min-width: 25rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+
+.Datatable thead tr {
+    background-color: #1e347b;
+    color: #ffffff;
+    text-align: left;
+}
+
+.Datatable tr:hover td {
+    background-color: #2aabd2;
+}
+
+.Datatable th {
+    text-align: center;
+    padding: 1rem 1rem;
+    color: #ffffff;
+}
+
+.Datatable td {
+    text-align: center;
+    padding: 0.75rem 1rem;
+    color: #ffffff;
+}
+
+.Datatable tbody tr {
+    border-bottom: 1px solid #dddddd;
+    /*background: rgb(28, 82, 128);*/
+    /*background: linear-gradient(90deg, rgba(28, 82, 128, 1) 45%, rgba(28, 81, 153, 1) 70%, rgba(13, 106, 129, 1) 97%, rgba(14, 122, 144, 1) 100%);*/
+    /*font-family: "Times New Roman", sans-serif;*/
+    font-size: 1rem;
+}
+
+

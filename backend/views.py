@@ -35,7 +35,7 @@ def getUnitView(request):
         last_shift = DbShift.objects.last()
 
         zone = pytz.timezone('Europe/Moscow')
-        time_interval = datetime.datetime.now(zone) + datetime.timedelta(hours=1.75)
+        time_interval = datetime.datetime.now(zone) + datetime.timedelta(hours=1)
 
         for unit in units:
             machine = DbWorkunits.objects.get(unit_ref=unit.unit_ref)
@@ -79,7 +79,8 @@ def OperationFullUnits(request):
     if request.method == 'GET':
         try:
             last_shift = DbShift.objects.last()
-            queryset = DbTubetechoperations.objects.select_related('unitref').all().filter(shiftref=last_shift)
+            queryset = DbTubetechoperations.objects.select_related('unitref').all()\
+                .filter(shiftref=last_shift).order_by('-optime')
             serializer = OperationTubeSerializer(queryset, many=True)
 
             return Response({'data': serializer.data}, status=status.HTTP_200_OK)
