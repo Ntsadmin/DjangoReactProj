@@ -33,10 +33,12 @@ export default class Units extends Component {
         }
     }
 
+    // Получаем все возможные участки
     async unitsData() {
         const Response = await units.getUnits()
         const responseUnitResult = Response.data
 
+        // Меняем состояние участка, если были добавлены операции
         await this.changesCheckUnits(this.state.data, responseUnitResult.data)
 
         if (this._isMounted) {
@@ -58,6 +60,7 @@ export default class Units extends Component {
     }
 
 
+    // Получаем все возможные операции
     async getFullOperations() {
 
         const operationsResponse = await units.getFullOperations()
@@ -80,6 +83,7 @@ export default class Units extends Component {
     }
 
 
+    // При рендеринг вызываем начальные функции (вместе), после вызывает по очереди каждые n секунд
     async componentDidMount() {
         this._isMounted = true
         await Promise.all([this.unitsData(), this.getFullOperations()]);
@@ -134,6 +138,7 @@ export default class Units extends Component {
                         if (machine.online_accessible) {
 
                             return (
+                                // Передаём ключ, который меняется, чтобы дочерние элементы рендерились при изменении ключа
                                 <TechOp key={machine.total_treated_tubes + machine.unit_name} machine={machine} info={this.state.operations}/>
                             );
                         }

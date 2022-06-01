@@ -18,12 +18,14 @@ function TechOp({info, machine}) {
         try {
             if (mounted) {
                 setAvailableMachine(true)
+                // Если изменились данные, то меняем состояние, чтобы отследить в дальнейшим это состояние
                 if ('noChanges' in machine && !machine.noChanges) {
                     setChanges(true)
                 } else {
                     setChanges(false)
                 }
             }
+            // Строем таблицу
             techResultTable(info, machineName, params, machine.is_productive, changes)
 
         } catch (e) {

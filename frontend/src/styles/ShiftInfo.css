@@ -1,0 +1,15 @@
+.shiftInfo {
+    margin: auto;
+    padding: 10px;
+    position: absolute;
+    left: 15%;
+    top: 25%;
+    transform: translate(0, -50%);
+}
+
+.labels {
+    color: #FFFFFF;
+    font-family: "Times New Roman", Arial, sans-serif;
+    font-size: 1rem;
+    margin: 0.5rem;
+}

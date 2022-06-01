@@ -63,6 +63,11 @@ export default class Operations {
         return axios.get(url)
     }
 
+    getShiftInfo(pk) {
+        const url = `${API_URL}/shift/${pk}`
+        return axios.get(url)
+    }
+
     // Добавление смены в регистре (пробный запрос)
     postShift(data) {
         const take = `${API_URL}/shift/`

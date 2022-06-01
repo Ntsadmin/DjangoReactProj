@@ -79,7 +79,7 @@ def OperationFullUnits(request):
     if request.method == 'GET':
         try:
             last_shift = DbShift.objects.last()
-            queryset = DbTubetechoperations.objects.select_related('unitref').all()\
+            queryset = DbTubetechoperations.objects.select_related('unitref').all() \
                 .filter(shiftref=last_shift).order_by('-optime')
             serializer = OperationTubeSerializer(queryset, many=True)
 
@@ -125,7 +125,7 @@ def OpUnitRefLastElement(request, pk):
             serializer = OperationTubeSerializer(last_element)
             return Response({'data': serializer.data}, status=status.HTTP_200_OK)
         except:
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class ShiftUnit(generics.ListCreateAPIView):
@@ -134,6 +134,49 @@ class ShiftUnit(generics.ListCreateAPIView):
     """
     queryset = DbShift.objects.all()
     serializer_class = ShiftSerializer
+
+
+@api_view(['GET'])
+def getShiftInfo(request, pk):
+    """
+    Получить информацию про выбранную смену
+    """
+    if request.method == 'GET':
+        try:
+            # Pk передаёт основные параметры, которые и будут фильтровать наш запрос
+            params = pk.split("_")
+
+            # Мера принята для того, чтобы не сбивался Django c datetime
+            zone = pytz.timezone('Europe/Moscow')
+
+            # Из второй части запроса берём выбранную дату
+            datetime_params = datetime.datetime.strptime(params[1], "%Y-%m-%d")
+            datetime_params = zone.localize(datetime_params)
+
+            # Интервал на целый день, чтобы попасть использовать псевдо-between
+            interval_datetime_params = datetime_params + datetime.timedelta(days=1)
+
+            # Получаем результат запроса в БД
+            selected_shift = DbShift.objects.get(shiftnum=int(params[0]), time_date__gt=datetime_params,
+                                                 time_date__lt=interval_datetime_params)
+
+            # Устанавливаем ID
+            shift_ref = selected_shift.id
+
+            # Суммарное количество труб на шаблоне (вход)
+            measuring_process_total_tubes = DbTubetechoperations.objects.filter(shiftref=shift_ref, unitref=11).count()
+
+            # Количество бракованных труб
+            total_bad_tubes = DbTubetechoperations.objects.filter(shiftref=shift_ref, opresult=2).count()
+
+            # Количество труб пройдены через маркировку (выход)
+            marked_total_tubes = DbTubetechoperations.objects.filter(shiftref=shift_ref, unitref=17).count()
+
+            return Response({'data': (measuring_process_total_tubes, total_bad_tubes, marked_total_tubes)},
+                            status=status.HTTP_200_OK)
+
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class downCauseUnit(generics.ListAPIView):

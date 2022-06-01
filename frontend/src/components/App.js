@@ -1,5 +1,5 @@
 import React from "react";
-import {Route, Routes} from 'react-router-dom';
+import {Prompt, Route, Routes} from 'react-router-dom';
 
 import '../styles/App.css';
 
@@ -7,6 +7,7 @@ import Footer from "../Standart/Footer";
 import Units from "./Units";
 import LoginPage from "./Login";
 import PrivateRoute from "../utils/PrivateRoute";
+import ShiftInfo from "./shiftInfo";
 
 
 // Функция ответственная за структуру приложении
@@ -24,6 +25,10 @@ function App() {
                                    element={<PrivateRoute>
                                        <Units/>
                                    </PrivateRoute>}/>
+                            <Route path={"/shift/"}
+                                   element={<PrivateRoute>
+                                       <ShiftInfo/>
+                                   </PrivateRoute>} />
                         </Routes>
                 </div>
 

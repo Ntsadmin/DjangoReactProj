@@ -13,14 +13,16 @@ function Header() {
         <div className={'navbar'}>
             <nav className={"logoutButton"}>
                 <ul>
-                    <li>
-                        {user ? (
-                            <a onClick={logoutUser}>logout</a>
-                        ) : (
 
+                    {user ? (
+                        <li>
+                            <a onClick={logoutUser}>logout</a>
+                        </li>
+                    ) : (
+                        <li>
                             <Link to={"/login"}> Login </Link>
-                        )}
-                    </li>
+                        </li>
+                    )}
                 </ul>
             </nav>
         </div>
