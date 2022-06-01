@@ -34,8 +34,6 @@ function TechOp({info, machine}) {
 
     useEffect(() => {
         let isMounted = true
-        console.log("render")
-
 
         getTableResult(isMounted)
 

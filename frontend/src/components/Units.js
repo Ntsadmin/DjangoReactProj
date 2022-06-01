@@ -36,14 +36,8 @@ export default class Units extends Component {
     async unitsData() {
         const Response = await units.getUnits()
         const responseUnitResult = Response.data
-        console.log("updated!")
 
-        // await this.changesCheckUnits(this.state.data, responseUnitResult.data)
-        // this.setState(() => {
-        //     return {
-        //         loaded: false
-        //     }
-        // })
+        await this.changesCheckUnits(this.state.data, responseUnitResult.data)
 
         if (this._isMounted) {
             if (Response.status > 400) {
@@ -135,17 +129,16 @@ export default class Units extends Component {
                     </tr>
                     </thead>
                     <tbody className={"Datatable"}>
-                    {this.state.loaded ? this.state.data.map(machine => {
+                    {this.state.data.map(machine => {
 
                         if (machine.online_accessible) {
 
                             return (
-                                <TechOp key={machine.id} machine={machine} info={this.state.operations}/>
+                                <TechOp key={machine.total_treated_tubes + machine.unit_name} machine={machine} info={this.state.operations}/>
                             );
                         }
-                    }) : <tr>
-
-                    </tr>}
+                    })
+                    }
 
                     < /tbody>
                 </Table>
