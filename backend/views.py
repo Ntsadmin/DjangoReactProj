@@ -172,8 +172,11 @@ def getShiftInfo(request, pk):
             # Количество труб пройдены через маркировку (выход)
             marked_total_tubes = DbTubetechoperations.objects.filter(shiftref=shift_ref, unitref=17).count()
 
-            return Response({'data': (measuring_process_total_tubes, total_bad_tubes, marked_total_tubes)},
-                            status=status.HTTP_200_OK)
+            return Response({'data': {
+                "enter_tubes": measuring_process_total_tubes,
+                'factory_bad_tubes': total_bad_tubes,
+                "exit_tubes": marked_total_tubes
+            }}, status=status.HTTP_200_OK)
 
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)

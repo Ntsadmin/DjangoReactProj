@@ -8,6 +8,11 @@ import "../styles/ShiftInfo.css"
 import Operations from "../axiosRequests/axiosRequests";
 import {Table} from "react-bootstrap";
 import shiftInfoTable from "../tableOperationTables/shiftInfoTable";
+import CSVDownload from "react-csv/src/components/Download";
+import {ExportCSV} from "./ExportCSV";
+
+
+
 
 const getInfoShift = new Operations();
 
@@ -16,6 +21,10 @@ function ShiftInfo() {
 
     const [startDate, setStartDate] = useState(new Date());
     const [shiftNum, setShiftNum] = useState(null);
+
+    let cvsData = [
+        ["Дата", "Смена", "Вход", "% брака", "Выход"]
+    ]
 
     const options = [
         {value: 1, label: 'Первая смена'},
@@ -28,6 +37,11 @@ function ShiftInfo() {
             return null
         } else {
             const shiftResult = response.data.data
+            const badTubes = Math.round((1 - (shiftResult.exit_tubes/shiftResult.enter_tubes)) * 1000) / 10
+            const AddedValues = [selectedDate, selectedShift, shiftResult.enter_tubes, badTubes, shiftResult.exit_tubes]
+
+            cvsData.push(AddedValues)
+
             await shiftInfoTable(selectedDate, selectedShift, shiftResult)
         }
     }
@@ -41,7 +55,6 @@ function ShiftInfo() {
         const sentURL = `${shiftNum}_${getSelectedDate}`
 
         await getShiftRequestResult(sentURL, getSelectedDate, shiftNum)
-
     }
 
 
@@ -58,9 +71,9 @@ function ShiftInfo() {
                     onChange={(numShift) => setShiftNum(numShift.value)}
             />
 
-            <button className="btn btn-primary" onClick={handleSubmit}>Показать данные</button>
+            <button className="btn35 btn60" onClick={handleSubmit}>Показать данные</button>
 
-            <Table className={"Datatable"}>
+            <Table className={"shiftInfoTable"}>
                 <thead>
                 <tr>
                     <th>
@@ -83,6 +96,9 @@ function ShiftInfo() {
                 <tbody className={"Datatable"} id={"tbody-content"}/>
 
             </Table>
+            
+            <ExportCSV csvData={cvsData} fileName={`Данные за ${startDate}`} />
+
         </div>
     )
 }

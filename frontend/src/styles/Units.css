@@ -68,7 +68,7 @@ a::before {
 
 .Datatable {
     border-collapse: collapse;
-    margin: 1.5rem 0;
+    margin: 2.5rem 1rem;
     font-size: 1em;
     font-family: "Times New Roman", sans-serif;
     min-width: 25rem;

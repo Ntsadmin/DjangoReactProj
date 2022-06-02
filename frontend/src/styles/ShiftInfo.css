@@ -1,9 +1,9 @@
 .shiftInfo {
     margin: auto;
-    padding: 10px;
+    padding: 1rem;
     position: absolute;
-    left: 15%;
-    top: 25%;
+    left: 20%;
+    top: 40%;
     transform: translate(0, -50%);
 }
 
@@ -12,4 +12,62 @@
     font-family: "Times New Roman", Arial, sans-serif;
     font-size: 1rem;
     margin: 0.5rem;
+}
+
+.shiftInfoTable {
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 1rem;
+    font-family: "Times New Roman", sans-serif;
+    min-width: 40rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.shiftInfoTable thead tr {
+    background-color: #1e347b;
+    color: #ffffff;
+    text-align: left;
+}
+
+.shiftInfoTable tr:hover td {
+    background-color: #2aabd2;
+}
+
+.shiftInfoTable th {
+    text-align: center;
+    padding: 1rem 1rem;
+    color: #ffffff;
+}
+
+.shiftInfoTable td {
+    text-align: center;
+    padding: 0.75rem 1rem;
+    color: #ffffff;
+}
+
+.shiftInfoTable tbody tr {
+    border-bottom: 1px solid #dddddd;
+    font-size: 1rem;
+}
+
+.btn35 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0.3rem 1rem;
+    font-family: "Times New Roman", Arial, sans-serif;
+    font-weight: 200;
+    font-size: 1rem;
+    text-align: center;
+    text-decoration: none;
+    color: #0061ff;
+    backface-visibility: hidden;
+    border: 0.3rem solid transparent;
+    border-radius: 1rem;
+
+}
+
+.btn35:hover {
+    background: rgb(10, 42, 136) 100% 0;
 }
