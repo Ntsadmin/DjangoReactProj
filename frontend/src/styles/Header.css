@@ -2,7 +2,6 @@
     background-color: transparent;
     position: fixed;
     display: inline;
-    top: 0;
     left: 0;
     right: 0;
     height: auto;
@@ -10,10 +9,14 @@
 
 }
 
+.navbar ul li {
+    display: inline;
+    margin: 1rem;
+}
+
 .navbar li {
     color: white;
     list-style-type: none;
-    margin: 1rem;
     font-family: "Times New Roman", Arial, sans-serif;
     font-size: 1.25rem;
     text-decoration: none;
