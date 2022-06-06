@@ -6,18 +6,16 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 PORT = config('PORT')
 
-ALLOWED_HOSTS = ['192.100.1.35']
+ALLOWED_HOSTS = ['reports.nts-leader.ru','192.100.1.108',]
 
 # Application definition
 
@@ -41,7 +39,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 
     # for speed testing (requests etc...)
-    "debug_toolbar",
+    # "debug_toolbar",
+
+    "whitenoise.runserver_nostatic",
 ]
 
 SIMPLE_JWT = {
@@ -89,6 +89,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
@@ -96,27 +97,16 @@ MIDDLEWARE = [
 INTERNAL_IPS = [
     # ...
     "127.0.0.1",
-    '192.100.1.35',
+    '192.100.1.108',
     # ...
 ]
 
 # Open the port where the frontend will start
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:7000',
-    'http://127.0.0.1:7000',
-    'http://localhost:3000',
-    'http://192.100.1.35:7000',
-    'http://127.0.0.1:3000',
-    'http://localhost:8080',
-    'http://127.0.0.1:8080',
+    'http://192.100.1.108:7000',
 )
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:7000',
-                        'http://127.0.0.1:7000',
-                        'http://localhost:3000',
-                        'http://192.100.1.35:7000',
-                        'http://127.0.0.1:3000',
-                        'http://localhost:8080',
+CSRF_TRUSTED_ORIGINS = ['http://192.100.1.108:7000',
                         'http://127.0.0.1:8080', ]
 
 CORS_ORIGIN_ALLOW_ALL = False
@@ -205,6 +195,7 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = 'media/'
 
@@ -215,6 +206,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+SECURE_BROWSER_XSS_FILTER = True

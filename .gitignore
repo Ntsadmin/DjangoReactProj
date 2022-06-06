@@ -60,8 +60,8 @@ __pypackages__/
 # Environments
 .env
 /venv
+/.venv
 
 # Ignore the node modules for NPM
 /frontend/node_modules
-
 

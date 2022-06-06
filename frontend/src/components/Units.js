@@ -86,7 +86,8 @@ export default class Units extends Component {
     // При рендеринг вызываем начальные функции (вместе), после вызывает по очереди каждые n секунд
     async componentDidMount() {
         this._isMounted = true
-        await Promise.all([this.unitsData(), this.getFullOperations()]);
+	await this.getFullOperations();
+	await this.unitsData();
         this.timer = setInterval(async () => {
             await this.getFullOperations();
             await this.unitsData();

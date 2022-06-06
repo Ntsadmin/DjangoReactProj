@@ -82,7 +82,7 @@ function techResultTable(ResponseData, machineName, unit_ref, productivity, chan
             (e) {
             alert(e)
         }
-    }, 500)
+    }, 250)
 }
 
 export default techResultTable;

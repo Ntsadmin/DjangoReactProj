@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Передаём сюда общее URL нашего endpoint
-const API_URL = 'http://192.100.1.35:7000/api'
+const API_URL = 'https://192.100.1.108/api'
 
 // These axios defaults allows us to get the csrftoken of any django requests
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'

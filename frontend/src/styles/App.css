@@ -2,8 +2,7 @@ html,
 body {
     height: 100%;
     width: 100%;
-    background-image: url('http://192.100.1.35:7000/media/background.jpg');
-    background-size: cover;
+    background: linear-gradient(to right, rgb(55, 59, 68), rgb(66,134,244));
     margin: 0;
 }
 
