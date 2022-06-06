@@ -5,8 +5,18 @@ import { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
 
 
-const baseURL = 'https://192.100.1.108'
 
+const windowsURL = window.location.href
+let usedURL = ''
+
+
+if (windowsURL.includes('192.100.1') {
+	usedURL = '192.100.1.108';
+} else if (windowsURL.includes('reports.nts-leader') {
+	usedURL = 'reports.nts-leader.ru:2082';
+} else {
+	usedURL = ''
+}
 
 const useAxios = () => {
     const {authTokens, setUser, setAuthTokens} = useContext(AuthContext)
@@ -24,7 +34,7 @@ const useAxios = () => {
 
         if(!isExpired) return req
 
-        const response = await axios.post(`${baseURL}/api/token/refresh/`, {
+        const response = await axios.post(`${usedURL}/VN61iml2PYcEqa/token/refresh/`, {
             refresh: authTokens.refresh
           });
 

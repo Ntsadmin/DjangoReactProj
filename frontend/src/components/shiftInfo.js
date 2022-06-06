@@ -37,10 +37,15 @@ function ShiftInfo() {
             return null
         } else {
             const shiftResult = response.data.data
+
             const badTubes = Math.round((1 - (shiftResult.exit_tubes/shiftResult.enter_tubes)) * 1000) / 10
+	    const badTubes2 = Math.round((1 - (shiftResult.exit_line2 / shiftResult.enter_line2)) * 1000) / 10
+
             const AddedValues = [selectedDate, selectedShift, shiftResult.enter_tubes, badTubes, shiftResult.exit_tubes]
+	    const secondLineValues = [selectedDate, selectedShift, shiftResult.enter_line2, badTubes2, shiftResult.exit_line2]
 
             cvsData.push(AddedValues)
+	    cvsData.push(secondLineValues)
 
             await shiftInfoTable(selectedDate, selectedShift, shiftResult)
         }
@@ -91,6 +96,9 @@ function ShiftInfo() {
                     <th>
                         Годная
                     </th>
+	    	    <th>
+	    		Линия
+	            </th>
                 </tr>
                 </thead>
                 <tbody className={"Datatable"} id={"tbody-content"}/>

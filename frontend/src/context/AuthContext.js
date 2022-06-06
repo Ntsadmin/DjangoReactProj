@@ -14,11 +14,21 @@ export const AuthProvider = ({children}) => {
     let [loading, setLoading] = useState(true)
 
     const navigate = useNavigate()
+    const windowsURL = window.location.href
+    let usedURL = ''
+
+    if (windowsURL.includes('192.100.1')) {
+	    usedURL = '192.100.1.108';
+    } else if (windowsURL.includes('reports.nts-leader')) {
+	    usedURL = 'reports.nts-leader.ru:2082';
+    } else {
+	    usedURL = ''
+    }
 
 
     let loginUser = async (e) => {
         e.preventDefault()
-        let response = await fetch('https://192.100.1.108/api/token/', {
+        let response = await fetch(`https://${usedURL}/VN61iml2PYcEqa/token/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

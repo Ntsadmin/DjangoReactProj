@@ -163,19 +163,27 @@ def getShiftInfo(request, pk):
             # Устанавливаем ID
             shift_ref = selected_shift.id
 
-            # Суммарное количество труб на шаблоне (вход)
-            measuring_process_total_tubes = DbTubetechoperations.objects.filter(shiftref=shift_ref, unitref=11).count()
+            # Суммарное количество труб на отвороте первой линии (вход)
+            measuring_process_total_tubes = DbTubetechoperations.objects.filter(shiftref=shift_ref, unitref=12).count()
 
             # Количество бракованных труб
             total_bad_tubes = DbTubetechoperations.objects.filter(shiftref=shift_ref, opresult=2).count()
 
-            # Количество труб пройдены через маркировку (выход)
+            # Количество труб пройдены через маркировку первой линии (выход)
             marked_total_tubes = DbTubetechoperations.objects.filter(shiftref=shift_ref, unitref=17).count()
+
+            # Суммарное количество труб на входе отворота второй линии (Вход 2)
+            otvorot_process_total_tubes = DbTubetechoperations.objects.filter(shiftref=shift_ref, unitref=52).count()
+
+            # Количество годных труб после НК2 (Выход 2)
+            NK_total_good_tubes = DbTubetechoperations.objects.filter(shiftref=shift_ref, opresult=1, unitref=53).count()
 
             return Response({'data': {
                 "enter_tubes": measuring_process_total_tubes,
                 'factory_bad_tubes': total_bad_tubes,
-                "exit_tubes": marked_total_tubes
+                "exit_tubes": marked_total_tubes,
+                'enter_line2': otvorot_process_total_tubes,
+                'exit_line2': NK_total_good_tubes
             }}, status=status.HTTP_200_OK)
 
         except:
