@@ -65,16 +65,23 @@ function ShiftInfo() {
 
     return (
         <div className={"shiftInfo"}>
-            <label className={'labels'}>Выберите дату</label>
-            <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-            />
+            <label className={'labels'} htmlFor="date-picker">
+	    	Выберите дату
+            	<DatePicker
+	    		id="date-picker"
+                	selected={startDate}
+                	onChange={(date) => setStartDate(date)}
+            	/>
+	    </label>
 
-            <label className={'labels'}>Выберите смену</label>
-            <Select options={options}
-                    onChange={(numShift) => setShiftNum(numShift.value)}
-            />
+            <label className={'labels'} htmlFor='option-selector'>
+	    	Выберите смену
+            	<Select 
+	       		id='option-selector'
+	    	    	options={options}
+                    	onChange={(numShift) => setShiftNum(numShift.value)}
+            	/>
+	    </label>
 
             <button className="btn35 btn60" onClick={handleSubmit}>Показать данные</button>
 

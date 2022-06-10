@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --mode development --open --hot",
     "dev": "webpack --mode development --entry ./public/index.js --output-path ./static/frontend",
-    "build": "webpack --mode production -- entry ./src/index.js --output-path ./static/frontend"
+    "build": "webpack --mode production --entry ./public/index.js --output-path ./static/frontend"
   },
   "author": "GregTMJ",
   "license": "ISC",
@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.17.9",
+    "@fvilers/disable-react-devtools": "^1.3.0",
     "bootstrap": "^5.1.3",
     "file-saver": "^2.0.5",
     "react-csv": "^2.2.2",

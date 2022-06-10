@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache  import cache_page
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
@@ -14,7 +15,7 @@ urlpatterns = [
     path(r'lastoperation/<int:pk>', OpUnitRefLastElement, name='last_unit_operation'),
     path('downcause/', downCauseUnit.as_view(), name='cause'),
     path(r'downcause/<int:pk>/', downCauseOp, name='unit_down_cause'),
-    path('shift/', ShiftUnit.as_view(), name='shift'),
+    path('shift/', cache_page(60*2)(ShiftUnit.as_view()), name='shift'),
     path('shift/<str:pk>', getShiftInfo, name='shift_info'),
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

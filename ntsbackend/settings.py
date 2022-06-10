@@ -1,5 +1,6 @@
 from datetime import timedelta
 from decouple import config
+import logging 
 from pathlib import Path
 import os
 
@@ -81,6 +82,7 @@ SIMPLE_JWT = {
 }
 
 MIDDLEWARE = [
+    'csp.middleware.CSPMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -113,10 +115,9 @@ CORS_ORIGIN_ALLOW_ALL = False
 
 # Отключает возможность смотреть в API
 REST_FRAMEWORK = {
-    # 'DEFAULT_RENDERER_CLASSES': (
-    #     'rest_framework.renderers.JSONRenderer',
-    #     'rest_framework.renderers.BrowsableAPIRenderer',
-    # ),
+     'DEFAULT_RENDERER_CLASSES': (
+         'rest_framework.renderers.JSONRenderer',
+     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.AllowAny",
     ),
@@ -158,6 +159,9 @@ DATABASES = {
         'PORT': config('DATABASE_PORT'),
     }
 }
+
+
+
 
 # Password validation
 
@@ -206,7 +210,23 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# setting cookie
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+
+# ssl acceptance
 SECURE_SSL_REDIRECT = True
+
+# X-XSS-Protection
 SECURE_BROWSER_XSS_FILTER = True
+
+# X-Frame-Options
+X_FRAME_OPTIONS = 'DENY'
+
+#Content-secure
+CSP_DEFAULT_SRC = ("'self'","'unsafe-eval'", "'unsafe-inline'", )
+CSP_SCRIPT_SRC = ("'self'","'unsafe-eval'","'unsafe-inline'", "'sha256-ZvnBsQqP+lLQ25s1luzfXfrsVzwJ4ZThCeOSj4ffdS0='")
+
+
+

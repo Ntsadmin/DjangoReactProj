@@ -4,6 +4,13 @@ import {BrowserRouter} from "react-router-dom";
 import App from "../src/components/App";
 import Header from "../src/Standart/Header";
 import {AuthProvider} from "../src/context/AuthContext";
+import { disableReactDevTools } from '@fvilers/disable-react-devtools';
+
+
+if (process.env.NODE_ENV === 'production') {
+	disableReactDevTools();
+}
+
 
 ReactDOM.render(
     <React.StrictMode>

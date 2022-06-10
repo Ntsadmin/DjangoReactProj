@@ -1,4 +1,5 @@
 import datetime
+from django.views.decorators.cache import cache_page
 import pytz
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -29,6 +30,7 @@ class UnitView(generics.ListAPIView):
 
 
 @api_view(['GET'])
+@cache_page(15, cache='default', key_prefix='')
 def getUnitView(request):
     if request.method == 'GET':
         units = DbWorkunits.objects.select_related('unitref').all().filter(online_accessible=True).order_by('unit_ref')
@@ -75,6 +77,7 @@ def getUnitRef(request, pk):
 
 
 @api_view(['GET'])
+@cache_page(15, cache='default', key_prefix='')
 def OperationFullUnits(request):
     if request.method == 'GET':
         try:
@@ -85,7 +88,7 @@ def OperationFullUnits(request):
 
             return Response({'data': serializer.data}, status=status.HTTP_200_OK)
         except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST, headers=None)
 
 
 class OperationUnit(generics.ListAPIView):
@@ -110,7 +113,7 @@ def OpUnitRef(request, pk):
             serializer = OperationTubeSerializer(UnitRef, many=True)
             return Response({'data': serializer.data}, status=status.HTTP_200_OK)
         except:
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_204_NO_CONTENT, headers=None)
 
 
 @api_view(['GET'])
@@ -123,9 +126,9 @@ def OpUnitRefLastElement(request, pk):
             UnitRef = DbTubetechoperations.objects.all().filter(unitref=pk)
             last_element = UnitRef.select_related('unitref').last()
             serializer = OperationTubeSerializer(last_element)
-            return Response({'data': serializer.data}, status=status.HTTP_200_OK)
+            return Response({'data': serializer.data}, status=status.HTTP_200_OK, headers=None)
         except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST, headers=None)
 
 
 class ShiftUnit(generics.ListCreateAPIView):
@@ -137,6 +140,7 @@ class ShiftUnit(generics.ListCreateAPIView):
 
 
 @api_view(['GET'])
+@cache_page(60, cache='default', key_prefix='')
 def getShiftInfo(request, pk):
     """
     Получить информацию про выбранную смену
@@ -187,7 +191,7 @@ def getShiftInfo(request, pk):
             }}, status=status.HTTP_200_OK)
 
         except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST, headers=None)
 
 
 class downCauseUnit(generics.ListAPIView):

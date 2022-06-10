@@ -3,9 +3,26 @@ import milliToHMS from "../utils/milliToHMS";
 function techResultTable(ResponseData, machineName, unit_ref, productivity, changes) {
 
     // начальное время (точка, от которой мы отталкиваемся)
-    const currentTime = new Date();
-    const currentMoscowTime = currentTime.setHours(currentTime.getHours() + 2)
-    let neededTime = new Date(currentMoscowTime)
+    let currentTime = new Date();
+    
+    if (6 <= currentTime.getHours() < 18) {
+        currentTime.setHours(8)
+        currentTime.setMinutes(0)
+        currentTime.setSeconds(0)
+    } else if (0 <= currentTime.getHours() < 6) {
+        currentTime.setHours(currentTime.getHours() - 12)
+        currentTime.setHours(20)
+        currentTime.setMinutes(0)
+        currentTime.setSeconds(0)
+    } else {
+        currentTime.setHours(20)
+        currentTime.setMinutes(0)
+        currentTime.setSeconds(0)
+    }
+
+    
+
+    let result = []
 
     setTimeout(() => {
 
@@ -27,30 +44,64 @@ function techResultTable(ResponseData, machineName, unit_ref, productivity, chan
 
                     if (tableData[i]['unitref'] === unit_ref) {
 
-                        // Время совершённой операции уникальным участком
-                        let techTime = new Date(tableData[i].optime)
-
-                        // Если разница превышает 5 мин, то добавляем к простою
-                        if (neededTime - techTime > 300000) {
-                            difference += neededTime - techTime
-                        }
-
-                        // Значение следующей точки записываем в начальной
-                        neededTime = techTime
-
-                        // Добавляем трубу к счётчику
-                        all_tubes += 1;
-                        if (tableData[i]['opresult'] === 1) {
-                            // Годная труба
-                            good_tubes += 1;
-                        } else {
-                            // Брак
-                            bad_tubes += 1;
-                        }
+                        // Сортируем весь полученный результат
+                        result.push(tableData[i])
 
                     }
                 }
             }
+
+	    for (let i = 0; i < result.length - 1; i++) {
+		    let techTime = new Date(result[i].optime)
+
+		    // Если разница превышает 5 мин, то добавляем к простою
+		    if (currentTime - techTime > 300000) {
+			    difference += currentTime - techTime
+		    }
+		    
+		    // Значение следующей точки записываем в начальной
+                    currentTime = techTime
+
+                    // Добавляем трубу к счётчику
+                    all_tubes += 1;
+                    if (tableData[i]['opresult'] === 1) {
+                            // Годная труба
+                            good_tubes += 1;
+                    } else {
+                            // Брак
+                            bad_tubes += 1;
+                    }
+	    }
+
+	    const lastElement = result[result.length -1]
+	    let constDate = new Date()
+	    if (6 <= constDate.getHours() < 18) {
+		    constDate.setHours(8)
+		    constDate.setMinutes(0)
+		    constDate.setSeconds(0)
+	    } else if (0 <= constDate.getHours() < 6) {
+		    constDate.setHours(constDate.getHours() - 12)
+		    constDate.setHours(20)
+		    constDate.setMinutes(0)
+		    constDate.setSeconds(0)
+	    } else {
+		    constDate.setHours(20)
+		    constDate.setMinutes(0)
+		    constDate.setSeconds(0)
+	    }
+	    
+	    if (new Date(lastElement.optime) - constDate > 300000) {
+		    difference += new Date(lastElement.optime) - constDate
+	    }
+	    
+	    all_tubes += 1;
+	
+ 	    if (lastElement.opresult === 1) {
+		    good_tubes += 1;
+	    } else {
+		    bad_tubes += 1;
+	    }
+
 
             // Конвертатор из миллисекунд в ч:м:с
             difference = milliToHMS(difference)
@@ -80,7 +131,7 @@ function techResultTable(ResponseData, machineName, unit_ref, productivity, chan
 
         } catch
             (e) {
-            alert(e)
+            console.log(e)
         }
     }, 250)
 }
