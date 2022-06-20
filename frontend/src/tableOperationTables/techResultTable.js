@@ -3,24 +3,7 @@ import milliToHMS from "../utils/milliToHMS";
 function techResultTable(ResponseData, machineName, unit_ref, productivity, changes) {
 
     // начальное время (точка, от которой мы отталкиваемся)
-    let currentTime = new Date();
-    
-    if (6 <= currentTime.getHours() < 18) {
-        currentTime.setHours(8)
-        currentTime.setMinutes(0)
-        currentTime.setSeconds(0)
-    } else if (0 <= currentTime.getHours() < 6) {
-        currentTime.setHours(currentTime.getHours() - 12)
-        currentTime.setHours(20)
-        currentTime.setMinutes(0)
-        currentTime.setSeconds(0)
-    } else {
-        currentTime.setHours(20)
-        currentTime.setMinutes(0)
-        currentTime.setSeconds(0)
-    }
-
-    
+    let factoryTime = factoryTimezone()
 
     let result = []
 
@@ -51,16 +34,15 @@ function techResultTable(ResponseData, machineName, unit_ref, productivity, chan
                 }
             }
 
-	    for (let i = 0; i < result.length - 1; i++) {
+	    for (let i = 1; i < result.length; i++) {
 		    let techTime = new Date(result[i].optime)
 
+		    factoryTime = new Date(result[i-1].optime)
+
 		    // Если разница превышает 5 мин, то добавляем к простою
-		    if (currentTime - techTime > 300000) {
-			    difference += currentTime - techTime
+		    if (techTime - factoryTime > 300000) {
+			    difference += techTime - factoryTime
 		    }
-		    
-		    // Значение следующей точки записываем в начальной
-                    currentTime = techTime
 
                     // Добавляем трубу к счётчику
                     all_tubes += 1;
@@ -72,36 +54,34 @@ function techResultTable(ResponseData, machineName, unit_ref, productivity, chan
                             bad_tubes += 1;
                     }
 	    }
-
-	    const lastElement = result[result.length -1]
-	    let constDate = new Date()
-	    if (6 <= constDate.getHours() < 18) {
-		    constDate.setHours(8)
-		    constDate.setMinutes(0)
-		    constDate.setSeconds(0)
-	    } else if (0 <= constDate.getHours() < 6) {
-		    constDate.setHours(constDate.getHours() - 12)
-		    constDate.setHours(20)
-		    constDate.setMinutes(0)
-		    constDate.setSeconds(0)
-	    } else {
-		    constDate.setHours(20)
-		    constDate.setMinutes(0)
-		    constDate.setSeconds(0)
-	    }
 	    
-	    if (new Date(lastElement.optime) - constDate > 300000) {
-		    difference += new Date(lastElement.optime) - constDate
-	    }
-	    
-	    all_tubes += 1;
+	    const firstFactoryTime = factoryTimezone()
 	
- 	    if (lastElement.opresult === 1) {
+	    const firstElement = result[0]
+	    const firstElementTime = new Date(firstElement.optime)
+
+	    if (firstElementTime - firstFactoryTime > 300000) {
+		    difference += firstElementTime - firstFactoryTime
+	    }
+
+	    all_tubes += 1;
+
+	    if (firstElement.opresult === 1) {
 		    good_tubes += 1;
 	    } else {
 		    bad_tubes += 1;
 	    }
 
+	    const currentTime = new Date()
+	    const currentFactoryTime = new Date(currentTime.toLocaleString('en-US', {timezone: 'Indian/Maldives'}))
+
+	    const lastElement = result[result.length - 1]
+	    const lastElementTime = new Date(lastElement.optime)
+
+	    if (currentFactoryTime - lastElementTime > 300000) {
+		    difference += currentFactoryTime - lastElementTime
+	    }
+	    
 
             // Конвертатор из миллисекунд в ч:м:с
             difference = milliToHMS(difference)
@@ -137,3 +117,29 @@ function techResultTable(ResponseData, machineName, unit_ref, productivity, chan
 }
 
 export default techResultTable;
+
+
+function factoryTimezone () {
+
+	const currentTime = new Date()
+
+	let factoryTime = new Date(currentTime.toLocaleString('en-US', {timezone: 'Indian/Maldives'}))
+
+	if ( 8 <= factoryTime.getHours() < 20) {
+		factoryTime.setHours(8)
+		factoryTime.setMinutes(0)
+		factoryTime.setSeconds(0)
+	} else if (0 <= factoryTime.getHours() < 8) {
+		factoryTime.setHours(factoryTime.getHouts() - 12)
+		factoryTime.setHours(20)
+		factoryTime.setMinutes(0)
+		factoryTime.setSeconds(0)
+	} else {
+		factoryTime.setHours(20)
+		factoryTime.setMinutes(0)
+		factoryTime.setSeconds(0)
+	}
+
+	return factoryTime
+}
+
