@@ -83,7 +83,7 @@ def OperationFullUnits(request):
         try:
             last_shift = DbShift.objects.last()
             queryset = DbTubetechoperations.objects.select_related('unitref').all() \
-                .filter(shiftref=last_shift).order_by('-optime')
+                .filter(shiftref=last_shift).order_by('optime')
             serializer = OperationTubeSerializer(queryset, many=True)
 
             return Response({'data': serializer.data}, status=status.HTTP_200_OK)

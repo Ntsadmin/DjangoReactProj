@@ -19,95 +19,115 @@ function techResultTable(ResponseData, machineName, unit_ref, productivity, chan
         let k = "";
         table.innerHTML = k;
         try {
-            k += '<td>' + machineName + '</td>';
+
+            	k += '<td>' + machineName + '</td>';
 
 
-            if (tableData.length) {
-                for (let i = 0; i < tableData.length; i++) {
+            	if (tableData.length) {
+                	for (let i = 0; i < tableData.length; i++) {
 
-                    if (tableData[i]['unitref'] === unit_ref) {
+                    		if (tableData[i]['unitref'] === unit_ref) {
 
-                        // Сортируем весь полученный результат
-                        result.push(tableData[i])
+                        		// Сортируем весь полученный результат
+                        		result.push(tableData[i])
 
-                    }
-                }
-            }
+                    		}	
+                	}
+            	}
 
-	    for (let i = 1; i < result.length; i++) {
-		    let techTime = new Date(result[i].optime)
+	   	// Если у нас имеются данные по участку 
+		if (result.length) {
 
-		    factoryTime = new Date(result[i-1].optime)
+			// Смотрим какой был простой у первой операции с начала работы смены
+			const firstElement = result[0]
 
-		    // Если разница превышает 5 мин, то добавляем к простою
-		    if (techTime - factoryTime > 300000) {
-			    difference += techTime - factoryTime
-		    }
+			let firstOperationTime = new Date(firstElement.optime)
 
-                    // Добавляем трубу к счётчику
-                    all_tubes += 1;
-                    if (tableData[i]['opresult'] === 1) {
-                            // Годная труба
-                            good_tubes += 1;
-                    } else {
-                            // Брак
-                            bad_tubes += 1;
-                    }
-	    }
-	    
-	    const firstFactoryTime = factoryTimezone()
+			// Если разница входит в ранее определяющий простой 
+			if (firstOperationTime - factoryTime > 300000) {
+				difference += firstOperationTime - factoryTime 
+			}
+
+			// Добавляем результат в таблицу 
+			all_tubes += 1;
+
+			if (firstElement.opresult === 1) {
+				good_tubes += 1;
+			} else {
+				bad_tubes += 1;
+			}
+
+			// Проверяем имеются ли больше чем один записанный результат 
+			if (result.length > 1) {
+				for (let i = 1; i < result.length; i++) {
+					// Записываем времени текущей операции и предыдущей для сравнения 
+					let currentTechTime = new Date(result[i].optime)
+
+					let prevTechTime = new Date(result[i - 1].optime)
+
+					// Если простой больше 5 мин 
+					if (currentTechTime - prevTechTime > 300000) {
+						difference += currentTechTime - prevTechTime 
+					}
+
+					// Добавляем результат в таблицу
+					all_tubes += 1;
+
+					if (result[i].opresult === 1) {
+						good_tubes += 1
+					} else {
+						bad_tubes += 1
+					}
+				}
+			}
+
+			// Теперь смотрим какой простой между последней операции и текущем временем 
+			const currentUTCTime = new Date()
+			const currentFactoryTime = new Date(currentUTCTime.toLocaleString('en-US', {timezone:'Indian/Maldives'}))
+
+			// Берём последний элемент операции 
+			const lastOperation = result[result.length - 1]
+			const lastOperationTime = new Date(lastOperation.optime)
+
+			if (currentFactoryTime - lastOperationTime > 300000) {
+				difference += currentFactoryTime - lastOperationTime
+			}
+		} else {
+			// Если у нас не было зарегитрировано ни единой операции, то просто считаем простой 
+			const currentUTCTime = new Date()
+			const currentFactoryTime = new Date(currentUTCTime.toLocaleString('en-US', {timezone:'Indian/Maldives'}))
+
+			difference += currentFactoryTime - factoryTime
+		}
+
+
 	
-	    const firstElement = result[0]
-	    const firstElementTime = new Date(firstElement.optime)
 
-	    if (firstElementTime - firstFactoryTime > 300000) {
-		    difference += firstElementTime - firstFactoryTime
-	    }
+            	// Конвертатор из миллисекунд в ч:м:с
+            	difference = milliToHMS(difference)
 
-	    all_tubes += 1;
+            	// Добавляем значения в таблицу
+            	k += '<td>' + all_tubes + '</td>';
+		k += '<td>' + good_tubes + '</td>';
+		k += '<td>' + bad_tubes + '</td>';
+            	k += '<td>' + productivity + '</td>';
+            	k += '<td>' + difference + '</td>';
 
-	    if (firstElement.opresult === 1) {
-		    good_tubes += 1;
-	    } else {
-		    bad_tubes += 1;
-	    }
+            	let t = k
 
-	    const currentTime = new Date()
-	    const currentFactoryTime = new Date(currentTime.toLocaleString('en-US', {timezone: 'Indian/Maldives'}))
+            	if (changes) {
+                	// Если труба добавлена, то ячейка загорится зелёным на 2 сек
+                	k += '<td class="changed"> </td>'
+                	setTimeout(() => {
+                    		t += '<td class="notChanged"> </td>'
+                    		table.innerHTML = ""
+                    		table.innerHTML += t
+                	}, 2000)
+            	} else {
+                	k += '<td class="notChanged"> </td>'
+            	}
 
-	    const lastElement = result[result.length - 1]
-	    const lastElementTime = new Date(lastElement.optime)
-
-	    if (currentFactoryTime - lastElementTime > 300000) {
-		    difference += currentFactoryTime - lastElementTime
-	    }
-	    
-
-            // Конвертатор из миллисекунд в ч:м:с
-            difference = milliToHMS(difference)
-
-            // Добавляем значения в таблицу
-            k += '<td>' + all_tubes + '</td>';
-            k += '<td>' + good_tubes + '</td>';
-            k += '<td>' + bad_tubes + '</td>';
-            k += '<td>' + productivity + '</td>';
-            k += '<td>' + difference + '</td>';
-
-            let t = k
-
-            if (changes) {
-                // Если труба добавлена, то ячейка загорится зелёным на 2 сек
-                k += '<td class="changed"> </td>'
-                setTimeout(() => {
-                    t += '<td class="notChanged"> </td>'
-                    table.innerHTML = ""
-                    table.innerHTML += t
-                }, 2000)
-            } else {
-                k += '<td class="notChanged"> </td>'
-            }
-
-            table.innerHTML += k;
+            	table.innerHTML += k;
 
         } catch
             (e) {
