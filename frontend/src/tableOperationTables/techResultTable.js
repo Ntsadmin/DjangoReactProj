@@ -83,20 +83,22 @@ function techResultTable(ResponseData, machineName, unit_ref, productivity, chan
 
 			// Теперь смотрим какой простой между последней операции и текущем временем 
 			const currentUTCTime = new Date()
-			const currentFactoryTime = new Date(currentUTCTime.toLocaleString('en-US', {timezone:'Indian/Maldives'}))
-
+			const currentFactoryTime = currentUTCTime.setHours(currentUTCTime.getHours() + 2)
+			// console.log(currentFactoryTime)
+			
 			// Берём последний элемент операции 
 			const lastOperation = result[result.length - 1]
 			const lastOperationTime = new Date(lastOperation.optime)
+			// console.log(lastOperationTime)
 
 			if (currentFactoryTime - lastOperationTime > 300000) {
+				// console.log(milliToHMS(currentFactoryTime - lastOperationTime))
 				difference += currentFactoryTime - lastOperationTime
 			}
 		} else {
 			// Если у нас не было зарегитрировано ни единой операции, то просто считаем простой 
 			const currentUTCTime = new Date()
-			const currentFactoryTime = new Date(currentUTCTime.toLocaleString('en-US', {timezone:'Indian/Maldives'}))
-
+			const currentFactoryTime = currentUTCTime.setHours(currentUTCTime.getHours() + 2)
 			difference += currentFactoryTime - factoryTime
 		}
 
