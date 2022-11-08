@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import DbUniqueWorkunits, DbWorkunits, DbTubetechoperations, DbTempdowntime, DbShift
+
+from .models import DbUniqueWorkunits, DbWorkunits, DbTubetechoperations,\
+    DbTempdowntime, DbShift
 
 
 class UniqueUnitsSerializer(serializers.ModelSerializer):
@@ -39,7 +41,8 @@ class DownOpCauseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DbTempdowntime
-        fields = ('id', 'worker', 'unit', 'stop_cause', 'time_of_stoppage', 'time_of_resume')
+        fields = ('id', 'worker', 'unit', 'stop_cause',
+                  'time_of_stoppage', 'time_of_resume')
 
 
 class ShiftSerializer(serializers.ModelSerializer):

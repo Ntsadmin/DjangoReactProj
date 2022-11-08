@@ -1,22 +1,21 @@
 from datetime import timedelta
 from decouple import config
-import logging 
+import logging
 from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 PORT = config('PORT')
 
-ALLOWED_HOSTS = ['reports.nts-leader.ru','192.100.1.108',]
+ALLOWED_HOSTS = ['reports.nts-leader.ru', '192.100.1.108', '127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -40,7 +39,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 
     # for speed testing (requests etc...)
-    # "debug_toolbar",
+    "debug_toolbar",
 
     "whitenoise.runserver_nostatic",
 ]
@@ -115,9 +114,9 @@ CORS_ORIGIN_ALLOW_ALL = False
 
 # Отключает возможность смотреть в API
 REST_FRAMEWORK = {
-     'DEFAULT_RENDERER_CLASSES': (
-         'rest_framework.renderers.JSONRenderer',
-     ),
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'rest_framework.renderers.JSONRenderer',
+    # ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.AllowAny",
     ),
@@ -153,15 +152,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': config('DATABASE'),
-        'USER': config('USER'),
-        'PASSWORD': config('PASSWORD'),
-        'HOST': config('HOST'),
-        'PORT': config('DATABASE_PORT'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
-
-
-
 
 # Password validation
 
@@ -197,7 +193,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 STATIC_URL = 'static/'
 
-STATIC_ROOT = STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
+STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -211,22 +207,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # setting cookie
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = True
-
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+#
 # ssl acceptance
-SECURE_SSL_REDIRECT = True
-
-# X-XSS-Protection
-SECURE_BROWSER_XSS_FILTER = True
-
-# X-Frame-Options
-X_FRAME_OPTIONS = 'DENY'
-
-#Content-secure
-CSP_DEFAULT_SRC = ("'self'","'unsafe-eval'", "'unsafe-inline'", )
-CSP_SCRIPT_SRC = ("'self'","'unsafe-eval'","'unsafe-inline'", "'sha256-ZvnBsQqP+lLQ25s1luzfXfrsVzwJ4ZThCeOSj4ffdS0='")
-
-
-
+SECURE_SSL_REDIRECT = False
+#
+# # X-XSS-Protection
+# SECURE_BROWSER_XSS_FILTER = False
+#
+# # X-Frame-Options
+# X_FRAME_OPTIONS = 'DENY'
+#
+# # Content-secure
+# CSP_DEFAULT_SRC = ("'self'", "'unsafe-eval'", "'unsafe-inline'",)
+# CSP_SCRIPT_SRC = ("'self'", "'unsafe-eval'", "'unsafe-inline'", "'sha256-ZvnBsQqP+lLQ25s1luzfXfrsVzwJ4ZThCeOSj4ffdS0='")

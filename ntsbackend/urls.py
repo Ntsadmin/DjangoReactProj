@@ -5,11 +5,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('VN61iml2PYcEqa/', include('backend.urls')),
+    path('rp5api/', include('backend.urls')),
     path('', include('frontend.urls')),
-
-   # path('__debug__/', include('debug_toolbar.urls')),
+    path('__debug__/', include('debug_toolbar.urls')),
 ]
 if settings.DEBUG:
-
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

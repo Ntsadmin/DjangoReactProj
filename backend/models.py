@@ -1,8 +1,10 @@
 """
-Многие модели не были использованы в дальнейшим, но имеют своё представление для будущего пользования
+Многие модели не были использованы в дальнейшим,
+но имеют своё представление для будущего пользования
 """
 
 import datetime
+
 from django.db import models
 
 
@@ -39,7 +41,9 @@ class DbStorage(models.Model):
     Модель представления заполненности стеллажей
     """
     storage_time = models.DateTimeField()
-    storage_ref = models.ForeignKey(DbUniqueStorage, to_field='storageref', on_delete=models.RESTRICT,
+    storage_ref = models.ForeignKey(DbUniqueStorage,
+                                    to_field='storageref',
+                                    on_delete=models.RESTRICT,
                                     db_column='storage_ref', null=True)
     status = models.IntegerField(blank=False, null=False, default=0)
 
@@ -79,7 +83,10 @@ class DbWorker(models.Model):
     Модель представления работников
     """
     fullname = models.CharField(max_length=200)
-    post = models.ForeignKey(DbWorkerPost, on_delete=models.RESTRICT, blank=True, null=True)
+    post = models.ForeignKey(DbWorkerPost,
+                             on_delete=models.RESTRICT,
+                             blank=True,
+                             null=True)
 
     class Meta:
         db_table = 'db_worker'
@@ -109,7 +116,10 @@ class DbWorkunits(models.Model):
     unit_plan = models.IntegerField(blank=True, null=False, default=200)
     online_accessible = models.BooleanField()
     unit_ref = models.IntegerField(unique=True, blank=True, null=True)
-    unitref = models.ForeignKey(DbUniqueWorkunits, on_delete=models.RESTRICT, db_column='unitref', blank=True,
+    unitref = models.ForeignKey(DbUniqueWorkunits,
+                                on_delete=models.RESTRICT,
+                                db_column='unitref',
+                                blank=True,
                                 null=True)
 
     is_productive = models.IntegerField(blank=True, null=True)
@@ -137,11 +147,19 @@ class DbTempdowntime(models.Model):
     """
     Модель представления причин останова участков
     """
-    worker = models.ForeignKey(DbWorker, on_delete=models.RESTRICT, to_field='id')
+    worker = models.ForeignKey(DbWorker,
+                               on_delete=models.RESTRICT,
+                               to_field='id')
     stop_cause = models.CharField(max_length=255)
-    time_of_stoppage = models.DateTimeField(blank=False, null=False, default=datetime.datetime.now)
-    time_of_resume = models.DateTimeField(blank=False, null=False, default=datetime.datetime.now)
-    unit = models.ForeignKey(DbWorkunits, on_delete=models.RESTRICT, to_field='unit_ref')
+    time_of_stoppage = models.DateTimeField(blank=False,
+                                            null=False,
+                                            default=datetime.datetime.now)
+    time_of_resume = models.DateTimeField(blank=False,
+                                          null=False,
+                                          default=datetime.datetime.now)
+    unit = models.ForeignKey(DbWorkunits,
+                             on_delete=models.RESTRICT,
+                             to_field='unit_ref')
 
     class Meta:
         db_table = 'db_tempdowntime'
@@ -154,13 +172,28 @@ class DbTubetechoperations(models.Model):
     """
     Модель представления совершённых операции
     """
-    diameterref = models.ForeignKey(DbTubediameter, on_delete=models.RESTRICT, db_column='diameterref', blank=True,
+    diameterref = models.ForeignKey(DbTubediameter,
+                                    on_delete=models.RESTRICT,
+                                    db_column='diameterref',
+                                    blank=True,
                                     null=True)
-    unitref = models.ForeignKey(DbWorkunits, on_delete=models.RESTRICT, db_column='unitref', blank=True, null=True,
+    unitref = models.ForeignKey(DbWorkunits,
+                                on_delete=models.RESTRICT,
+                                db_column='unitref',
+                                blank=True,
+                                null=True,
                                 to_field='unit_ref')
-    workerref = models.ForeignKey(DbWorker, on_delete=models.RESTRICT, db_column='workerref', blank=True, null=True,
+    workerref = models.ForeignKey(DbWorker,
+                                  on_delete=models.RESTRICT,
+                                  db_column='workerref',
+                                  blank=True,
+                                  null=True,
                                   to_field='id')
-    shiftref = models.ForeignKey(DbShift, on_delete=models.RESTRICT, db_column='shiftref', blank=True, null=True,
+    shiftref = models.ForeignKey(DbShift,
+                                 on_delete=models.RESTRICT,
+                                 db_column='shiftref',
+                                 blank=True,
+                                 null=True,
                                  to_field='id')
     opresult = models.IntegerField(blank=True, null=True)
     optime = models.DateTimeField()
