@@ -112,13 +112,15 @@ CSRF_TRUSTED_ORIGINS = ['http://192.100.1.108:7000',
 
 CORS_ORIGIN_ALLOW_ALL = False
 
+APPEND_SLASH = False
+
 # Отключает возможность смотреть в API
 REST_FRAMEWORK = {
     # 'DEFAULT_RENDERER_CLASSES': (
     #     'rest_framework.renderers.JSONRenderer',
     # ),
     "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.AllowAny",
+        "rest_framework.permissions.IsAuthenticated",
     ),
 
     # This gives us the token that we need in API
