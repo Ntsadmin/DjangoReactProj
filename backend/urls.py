@@ -17,6 +17,6 @@ urlpatterns = [
     path(r'lastoperation/<int:pk>', get_unit_last_operation, name='last_unit_operation'),
     path('shift/', cache_page(60*2)(ShiftUnit.as_view()), name='shift'),
     path('shift/<str:pk>', get_shift_info, name='shift_info'),
-    path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/obtain/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

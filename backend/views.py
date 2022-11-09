@@ -3,9 +3,9 @@ import threading
 import pytz
 
 from rest_framework import generics, status
+from rest_framework.decorators import api_view
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -76,7 +76,7 @@ def get_unit_ref(request, pk):
     """
     if request.method == 'GET':
         try:
-            unit = DbWorkunits.objects.get(unit_ref=pk)
+            unit = DbWorkunits.objects.all().filter(unit_ref=pk)
             serializer = UnitSerializer(unit, many=True)
             return Response({'data': serializer.data},
                             status=status.HTTP_200_OK)
@@ -143,7 +143,7 @@ def get_unit_last_operation(request, pk):
     """
     if request.method == 'GET':
         try:
-            unit_operations = DbTubetechoperations.objects.all().filter(unitref=pk)
+            unit_operations = DbTubetechoperations.objects.filter(unitref=pk)
             last_operation = unit_operations.select_related('unitref').last()
             serializer = OperationTubeSerializer(last_operation)
             return Response({'data': serializer.data},
